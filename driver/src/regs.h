@@ -1,7 +1,7 @@
 /*
- * SunPCI hardware register definitions
+ * SunPCi hardware register definitions
  *
- * The SunPCI card uses an Intel 21554 PCI-to-PCI bridge chip to connect
+ * The SunPCi card uses an Intel 21554 PCI-to-PCI bridge chip to connect
  * the x86 subsystem to the host SPARC PCI bus. This file defines the
  * register layout for communication with the card.
  *
@@ -67,14 +67,14 @@
 #define I21554_CSR_POWERDOWN        (1 << 2)    /* Power Down */
 #define I21554_CSR_LOCK             (1 << 3)    /* Lock */
 
-/* Doorbell Bits - these are defined by SunPCI firmware */
+/* Doorbell Bits - these are defined by SunPCi firmware */
 #define SUNPCI_DOORBELL_CMD_READY   (1 << 0)    /* Command queue has data */
 #define SUNPCI_DOORBELL_RSP_READY   (1 << 1)    /* Response queue has data */
 #define SUNPCI_DOORBELL_VGA_UPDATE  (1 << 2)    /* VGA framebuffer updated */
 #define SUNPCI_DOORBELL_RESET       (1 << 7)    /* Guest reset/reboot */
 
 /*
- * SunPCI-Specific Register Layout
+ * SunPCi-Specific Register Layout
  * These are layered on top of the 21554 standard registers
  * Location: Scratchpad registers or dedicated memory region
  */

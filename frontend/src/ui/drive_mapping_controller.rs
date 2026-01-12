@@ -46,7 +46,7 @@ mod qobject {
         #[qinvokable]
         fn load_mappings_json(self: Pin<&mut DriveMappingController>, json: QString) -> bool;
 
-        /// Get default mappings (like original SunPCI)
+        /// Get default mappings (like original SunPCi)
         #[qinvokable]
         fn get_default_mappings_json(self: &DriveMappingController) -> QString;
 
@@ -325,7 +325,7 @@ impl qobject::DriveMappingController {
         true
     }
 
-    /// Get default mappings (like original SunPCI autoexec.bat)
+    /// Get default mappings (like original SunPCi autoexec.bat)
     /// From analysis/05-filesystem-redirection.md:
     /// - F: = $SUNPCIIHOME (/opt/SUNWspci)
     /// - H: = ~ (home directory)

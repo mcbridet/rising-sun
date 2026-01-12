@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Input event injection
+ * SunPCi driver - Input event injection
  *
  * Injects keyboard and mouse events into the guest.
  */

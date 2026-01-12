@@ -1,8 +1,8 @@
-# SunPCI Reverse Engineering Analysis
+# SunPCi Reverse Engineering Analysis
 
 ## Overview
 
-SunPCI was a hardware/software product from Sun Microsystems that allowed SPARC-based workstations running Solaris to run x86 PC operating systems (DOS, Windows 95/98/NT/2000). This document analyzes the original SUNWspci package (version 1.3) to understand its architecture for reimplementation in the Rising Sun project.
+SunPCi was a hardware/software product from Sun Microsystems that allowed SPARC-based workstations running Solaris to run x86 PC operating systems (DOS, Windows 95/98/NT/2000). This document analyzes the original SUNWspci package (version 1.3) to understand its architecture for reimplementation in the Rising Sun project.
 
 ## Package Information
 
@@ -36,7 +36,7 @@ SunPCI was a hardware/software product from Sun Microsystems that allowed SPARC-
 │                           │                                      │
 │                           ▼                                      │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │                   SunPCI Hardware                         │   │
+│  │                   SunPCi Hardware                         │   │
 │  │          (PCI card with x86 CPU - pci108e,5043)          │   │
 │  └──────────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────────┘
@@ -116,7 +116,7 @@ The main emulation engine. SPARC 32-bit ELF binary (~441KB). This is the heart o
 
 **PCI Device ID**: `pci108e,5043`
 - Vendor: 108e (Sun Microsystems)
-- Device: 5043 (SunPCI card)
+- Device: 5043 (SunPCi card)
 
 **Device Node**: `/dev/sunpcidrv2`
 
@@ -150,7 +150,7 @@ Notable BIOS bugs fixed over versions:
 ### 5. Guest OS Drivers (drivers/)
 
 #### Windows 95 (win95/)
-- `sunpci.vxd` - Main SunPCI virtual device driver
+- `sunpci.vxd` - Main SunPCi virtual device driver
 - `spcdisp.drv/vxd` - Display driver
 - `spcmouse.vxd` - Mouse driver
 - `sunfsd.vxd` - File system driver (host access)
@@ -228,7 +228,7 @@ Uses X11/OpenWindows for display. Resources loaded from:
 - Solaris 2.5.1 or later
 - 12 MB swap space minimum
 - 1 MB /tmp space minimum
-- SunPCI hardware card
+- SunPCi hardware card
 
 ## Analysis Documents
 
@@ -244,7 +244,7 @@ Uses X11/OpenWindows for display. Resources loaded from:
 
 ## Comparison: Original vs Rising Sun
 
-| Aspect | SunPCI (Original) | Rising Sun |
+| Aspect | SunPCi (Original) | Rising Sun |
 |--------|-------------------|------------|
 | Host OS | Solaris/SPARC | Linux/x86-64 |
 | x86 Execution | Hardware (PCI card) | Hardware (PCI card) |

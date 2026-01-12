@@ -8,7 +8,7 @@ resolver = "2"
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-description = "SunPCI software for mere mortals"
+description = "SunPCi software for mere mortals"
 repository = "https://github.com/yourusername/rising-sun"
 
 [workspace.dependencies]

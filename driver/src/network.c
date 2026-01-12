@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Network subsystem
+ * SunPCi driver - Network subsystem
  *
  * Provides Ethernet connectivity to the guest via TAP device bridging.
  * The guest sees a virtual NIC that communicates through the host's

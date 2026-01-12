@@ -1,5 +1,5 @@
 /*
- * SunPCI driver userspace API
+ * SunPCi driver userspace API
  *
  * This header is shared between the kernel driver and userspace.
  * Keep in sync with common/src/ioctl.rs
@@ -16,7 +16,7 @@
  * Constants
  * ============================================================================ */
 
-/* Magic number for SunPCI ioctls */
+/* Magic number for SunPCi ioctls */
 #define SUNPCI_IOC_MAGIC 'S'
 
 /* Maximum path length */

@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 
 // Dialog for clipboard/copy-paste settings
-// Based on SunPCI clipboard analysis from analysis/06-clipboard.md
+// Based on SunPCi clipboard analysis from analysis/06-clipboard.md
 Dialog {
     id: clipboardSettingsDialog
     title: "Clipboard Settings"

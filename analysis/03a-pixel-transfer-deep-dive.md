@@ -1,8 +1,8 @@
-# SunPCI Pixel Transfer Deep Dive
+# SunPCi Pixel Transfer Deep Dive
 
 ## Executive Summary
 
-The SunPCI does **NOT** expose a traditional framebuffer to the guest. Instead, it uses a
+The SunPCi does **NOT** expose a traditional framebuffer to the guest. Instead, it uses a
 **command-based protocol** where the Windows display driver sends GDI-like drawing commands
 through a queue-based IPC mechanism to the host, which renders them using X11/Xlib.
 
@@ -10,7 +10,7 @@ through a queue-based IPC mechanism to the host, which renders them using X11/Xl
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              GUEST (x86 on SunPCI card)                     │
+│                              GUEST (x86 on SunPCi card)                     │
 │                                                                             │
 │  ┌─────────────────────────────────────────────────────────────────────┐   │
 │  │                        Windows 95/98/NT                              │   │
@@ -23,7 +23,7 @@ through a queue-based IPC mechanism to the host, which renders them using X11/Xl
 │                                                        ▼                    │
 │                              ┌─────────────────────────────────┐            │
 │                              │   Shared Memory / Ring Buffer   │            │
-│                              │   (on SunPCI card, PCI BAR)     │            │
+│                              │   (on SunPCi card, PCI BAR)     │            │
 │                              └───────────────┬─────────────────┘            │
 └──────────────────────────────────────────────┼──────────────────────────────┘
                                                │ PCI Bus
@@ -276,7 +276,7 @@ Based on the dispatch table relocations:
 
 ### The Problem
 
-The SunPCI card has x86 CPU + RAM on the card itself. When a DOS game writes to
+The SunPCi card has x86 CPU + RAM on the card itself. When a DOS game writes to
 `0xA0000` (VGA video memory), that write happens **on the card**, not visible
 to the host SPARC CPU.
 

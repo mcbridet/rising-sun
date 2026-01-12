@@ -504,7 +504,7 @@ ApplicationWindow {
             }
 
             Text {
-                text: "A modern reimplementation of SunPCI\nfor Linux with the original hardware."
+                text: "A modern reimplementation of SunPCi\nfor Linux with the original hardware."
                 font.pixelSize: 12
                 color: palette.text
                 opacity: 0.8
@@ -585,7 +585,7 @@ ApplicationWindow {
                         if (sessionController.session_starting) {
                             return "Starting session..."
                         } else if (!sessionController.driver_loaded) {
-                            return "SunPCI Driver Not Loaded"
+                            return "SunPCi Driver Not Loaded"
                         } else {
                             return "Ready to Start"
                         }

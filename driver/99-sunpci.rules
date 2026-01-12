@@ -1,4 +1,4 @@
-# SunPCI Device Permissions
+# SunPCi Device Permissions
 # Install to /etc/udev/rules.d/99-sunpci.rules
 #
 # After installing, run:

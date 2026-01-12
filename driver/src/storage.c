@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Storage passthrough
+ * SunPCi driver - Storage passthrough
  *
  * Handles INT 13h BIOS disk service requests from the guest.
  * Provides access to disk images, ISO files, and floppy images.
@@ -21,7 +21,7 @@
 /* Maximum sectors per transfer */
 #define MAX_SECTORS_PER_IO  128
 
-/* SunPCI disk image magic */
+/* SunPCi disk image magic */
 #define SUNPCI_DISK_MAGIC       0x53504349  /* "SPCI" at offset 12 */
 #define SUNPCI_DISK_MAGIC_OFF   12
 
@@ -87,7 +87,7 @@ static struct sunpci_storage_dev *get_storage_dev(struct sunpci_device *dev,
 
 /*
  * Calculate CHS geometry for a disk size
- * Uses the same algorithm as the original SunPCI
+ * Uses the same algorithm as the original SunPCi
  */
 static void calc_geometry(u64 total_sectors, u32 sector_size,
                          u32 *out_cyls, u32 *out_heads, u32 *out_sects)
@@ -204,7 +204,7 @@ static int validate_floppy(loff_t size)
 
 /*
  * Validate hard disk image
- * Checks for SunPCI magic at offset 12, or accepts raw images with MBR
+ * Checks for SunPCi magic at offset 12, or accepts raw images with MBR
  */
 static int validate_hdd(struct file *file, loff_t size)
 {
@@ -223,10 +223,10 @@ static int validate_hdd(struct file *file, loff_t size)
     if (ret != sizeof(buf))
         return -EIO;
     
-    /* Check for SunPCI magic at offset 12 */
+    /* Check for SunPCi magic at offset 12 */
     memcpy(&magic, buf + SUNPCI_DISK_MAGIC_OFF, sizeof(magic));
     if (le32_to_cpu(magic) == SUNPCI_DISK_MAGIC)
-        return 0;  /* Valid SunPCI disk image */
+        return 0;  /* Valid SunPCi disk image */
     
     /* Also accept raw disk images with MBR signature */
     pos = 510;
@@ -235,7 +235,7 @@ static int validate_hdd(struct file *file, loff_t size)
         return 0;  /* Valid MBR signature */
     
     /* Allow any image file - user knows what they're doing */
-    pr_warn("sunpci: disk image has no SunPCI or MBR signature, proceeding anyway\n");
+    pr_warn("sunpci: disk image has no SunPCi or MBR signature, proceeding anyway\n");
     return 0;
 }
 

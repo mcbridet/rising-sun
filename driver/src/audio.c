@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Audio subsystem
+ * SunPCi driver - Audio subsystem
  *
  * Handles ESS1869 sound card emulation. The guest x86 runs stock ESS
  * drivers which program the ISA DMA controller. The card's firmware
@@ -27,7 +27,7 @@
 
 /*
  * Fixed audio buffer location in shared memory (BAR1)
- * This is set by the SunPCI card's BIOS/firmware
+ * This is set by the SunPCi card's BIOS/firmware
  *
  * Low-latency configuration:
  *   - 16 slots of 4KB each = 64KB total

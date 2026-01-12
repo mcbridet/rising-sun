@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI input system translates between Sun/X11 keyboard and mouse events on the host and IBM PC AT-compatible keyboard/mouse protocols on the guest. This involves:
+The SunPCi input system translates between Sun/X11 keyboard and mouse events on the host and IBM PC AT-compatible keyboard/mouse protocols on the guest. This involves:
 
 1. **X11 KeySym to DOS Scancode translation** - Keyboard mapping tables
 2. **Code Page support** - Character set translations for international keyboards

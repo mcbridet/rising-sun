@@ -1,10 +1,10 @@
 /*
- * SunPCI driver - PCI device handling
+ * SunPCi driver - PCI device handling
  *
  * This file handles PCI device detection and resource management.
- * The driver only loads when a SunPCI card is detected.
+ * The driver only loads when a SunPCi card is detected.
  *
- * SunPCI Hardware:
+ * SunPCi Hardware:
  *   Uses Intel 21554 PCI-to-PCI Non-Transparent Bridge
  *   Vendor: 0x108e (Sun Microsystems)
  *   Device: 0x5043 ("PC" in ASCII)
@@ -25,7 +25,7 @@
 
 static int sunpci_card_count = 0;
 
-/* PCI device table - driver only binds to actual SunPCI hardware */
+/* PCI device table - driver only binds to actual SunPCi hardware */
 static const struct pci_device_id sunpci_pci_ids[] = {
     { PCI_DEVICE(SUNPCI_VENDOR_ID, SUNPCI_DEVICE_ID) },
     { 0 }
@@ -37,7 +37,7 @@ MODULE_DEVICE_TABLE(pci, sunpci_pci_ids);
  * @irq: IRQ number
  * @dev_id: Device pointer
  *
- * Handles interrupts from the SunPCI card (doorbell events).
+ * Handles interrupts from the SunPCi card (doorbell events).
  */
 static irqreturn_t sunpci_irq_handler(int irq, void *dev_id)
 {
@@ -76,7 +76,7 @@ static irqreturn_t sunpci_irq_handler(int irq, void *dev_id)
 
 /**
  * sunpci_setup_rings - Initialize ring buffers from shared memory
- * @dev: SunPCI device
+ * @dev: SunPCi device
  *
  * Sets up command and response ring buffers in shared memory.
  */
@@ -131,7 +131,7 @@ static int sunpci_setup_rings(struct sunpci_device *dev)
  * @pdev: PCI device being probed
  * @id: PCI device ID entry that matched
  *
- * Called when a SunPCI card is detected. Sets up resources and
+ * Called when a SunPCi card is detected. Sets up resources and
  * creates the character device interface.
  */
 static int sunpci_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
@@ -140,7 +140,7 @@ static int sunpci_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
     int ret;
     int i;
 
-    pr_info("sunpci: found SunPCI card at %s\n", pci_name(pdev));
+    pr_info("sunpci: found SunPCi card at %s\n", pci_name(pdev));
 
     /* Log all BARs for debugging */
     for (i = 0; i < 6; i++) {
@@ -250,7 +250,7 @@ err_disable:
  * sunpci_pci_remove - PCI device remove callback
  * @pdev: PCI device being removed
  *
- * Called when a SunPCI card is removed or driver is unloaded.
+ * Called when a SunPCi card is removed or driver is unloaded.
  */
 static void sunpci_pci_remove(struct pci_dev *pdev)
 {
@@ -377,7 +377,7 @@ int sunpci_pci_init(void)
 
     /* Check if any devices were found */
     if (sunpci_card_count == 0) {
-        pr_err("sunpci: no SunPCI cards detected\n");
+        pr_err("sunpci: no SunPCi cards detected\n");
         pci_unregister_driver(&sunpci_pci_driver);
         return -ENODEV;
     }

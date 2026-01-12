@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Memory mapping support
+ * SunPCi driver - Memory mapping support
  *
  * Provides mmap access to the framebuffer and shared memory for userspace.
  */

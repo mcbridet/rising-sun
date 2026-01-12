@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI display system provides a complete VGA/SVGA implementation that bridges the x86 guest with the Solaris X11 display system. The architecture consists of:
+The SunPCi display system provides a complete VGA/SVGA implementation that bridges the x86 guest with the Solaris X11 display system. The architecture consists of:
 
 1. **BIOS Video Services** (INT 10h) - Text mode and basic VGA
 2. **VGA Text Manager** - Text mode rendering via X11

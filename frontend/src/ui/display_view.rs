@@ -1,4 +1,4 @@
-//! Display view Qt component for rendering the SunPCI framebuffer.
+//! Display view Qt component for rendering the SunPCi framebuffer.
 //!
 //! This provides a QObject that manages framebuffer mmap and updates.
 //! The actual rendering is done via QML Image + ImageProvider.

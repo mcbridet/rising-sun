@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 
 // Dialog for network adapter settings
-// Based on SunPCI NDIS analysis from analysis/07-network.md
+// Based on SunPCi NDIS analysis from analysis/07-network.md
 Dialog {
     id: networkSettingsDialog
     title: "Network Settings"

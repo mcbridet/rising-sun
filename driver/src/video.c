@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Video/GDI subsystem
+ * SunPCi driver - Video/GDI subsystem
  *
  * Handles high-resolution graphics operations from Windows GDI.
  * The guest display driver (spcdisp.drv, sunvideo.dll) sends these

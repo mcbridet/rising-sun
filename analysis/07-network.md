@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI network subsystem provides Ethernet connectivity to the guest operating system by bridging the guest's virtual NIC to the host's physical network interface. The guest sees a virtual Ethernet adapter that communicates with the host via the NDIS (Network Driver Interface Specification) protocol layer.
+The SunPCi network subsystem provides Ethernet connectivity to the guest operating system by bridging the guest's virtual NIC to the host's physical network interface. The guest sees a virtual Ethernet adapter that communicates with the host via the NDIS (Network Driver Interface Specification) protocol layer.
 
 ## Architecture
 

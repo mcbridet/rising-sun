@@ -5,7 +5,7 @@ import QtQuick.Dialogs
 import QtQuick.Window
 
 // Dialog for managing host directory → guest drive letter mappings
-// Based on SunPCI filesystem redirection from analysis/05-filesystem-redirection.md
+// Based on SunPCi filesystem redirection from analysis/05-filesystem-redirection.md
 // Equivalent to "sunpcnet use X: /path" functionality
 Dialog {
     id: driveMappingDialog
@@ -18,8 +18,8 @@ Dialog {
     // Model for drive mappings
     ListModel {
         id: driveMappingsModel
-        // Default mappings like original SunPCI
-        ListElement { driveLetter: "F:"; hostPath: "/opt/SUNWspci"; description: "SunPCI Installation"; enabled: true }
+        // Default mappings like original SunPCi
+        ListElement { driveLetter: "F:"; hostPath: "/opt/SUNWspci"; description: "SunPCi Installation"; enabled: true }
         ListElement { driveLetter: "H:"; hostPath: "~"; description: "Home Directory"; enabled: true }
         ListElement { driveLetter: "R:"; hostPath: "/"; description: "Root Filesystem"; enabled: false }
     }
@@ -172,7 +172,7 @@ Dialog {
                 text: "Restore Defaults"
                 onClicked: {
                     driveMappingsModel.clear()
-                    driveMappingsModel.append({ driveLetter: "F:", hostPath: "/opt/SUNWspci", description: "SunPCI Installation", enabled: true })
+                    driveMappingsModel.append({ driveLetter: "F:", hostPath: "/opt/SUNWspci", description: "SunPCi Installation", enabled: true })
                     driveMappingsModel.append({ driveLetter: "H:", hostPath: "~", description: "Home Directory", enabled: true })
                     driveMappingsModel.append({ driveLetter: "R:", hostPath: "/", description: "Root Filesystem", enabled: false })
                 }

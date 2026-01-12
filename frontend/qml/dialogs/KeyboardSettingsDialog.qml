@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 
 // Dialog for keyboard and input settings
-// Based on SunPCI keyboard analysis from analysis/04-keyboard-mouse.md
+// Based on SunPCi keyboard analysis from analysis/04-keyboard-mouse.md
 Dialog {
     id: keyboardSettingsDialog
     title: "Keyboard Settings"

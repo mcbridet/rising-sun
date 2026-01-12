@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 
 // Dialog for viewing/editing disk image properties
-// Based on SunPCI disk format from analysis/01-virtual-disk-format.md
+// Based on SunPCi disk format from analysis/01-virtual-disk-format.md
 Dialog {
     id: diskPropertiesDialog
     title: "Disk Properties"

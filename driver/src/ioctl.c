@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - ioctl handling
+ * SunPCi driver - ioctl handling
  *
  * This file implements the userspace interface via ioctl commands.
  */

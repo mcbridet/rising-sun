@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - VGA display subsystem
+ * SunPCi driver - VGA display subsystem
  *
  * Handles VGA text mode, palette management, mode switching, and
  * dirty rectangle tracking for framebuffer updates.

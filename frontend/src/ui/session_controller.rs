@@ -1,4 +1,4 @@
-//! Session controller Qt bridge for SunPCI session management.
+//! Session controller Qt bridge for SunPCi session management.
 //!
 //! This wraps the DriverHandle from common to provide Qt/QML integration
 //! for starting, stopping, and monitoring sessions.
@@ -32,7 +32,7 @@ mod qobject {
         #[qproperty(QString, driver_version)]
         type SessionController = super::SessionControllerRust;
 
-        /// Check if the SunPCI driver is loaded and accessible
+        /// Check if the SunPCi driver is loaded and accessible
         #[qinvokable]
         fn check_driver(self: Pin<&mut SessionController>);
 

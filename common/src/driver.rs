@@ -1,4 +1,4 @@
-//! Interface to the SunPCI kernel driver.
+//! Interface to the SunPCi kernel driver.
 //!
 //! This module provides a safe Rust interface to the kernel driver's ioctl commands.
 //! The frontend uses this directly - no daemon required.
@@ -27,12 +27,12 @@ use crate::SunPciError;
 
 const DEVICE_PATH: &str = "/dev/sunpci0";
 
-/// Check if the SunPCI driver is loaded
+/// Check if the SunPCi driver is loaded
 pub fn is_driver_loaded() -> bool {
     std::path::Path::new(DEVICE_PATH).exists()
 }
 
-/// Handle to the SunPCI device.
+/// Handle to the SunPCi device.
 /// 
 /// This provides direct access to the kernel driver via ioctl.
 /// Only one instance should be active at a time since the hardware
@@ -42,7 +42,7 @@ pub struct DriverHandle {
 }
 
 impl DriverHandle {
-    /// Open the SunPCI device.
+    /// Open the SunPCi device.
     /// 
     /// Requires read/write access to /dev/sunpci0.
     /// Use udev rules to grant access to a 'sunpci' group.

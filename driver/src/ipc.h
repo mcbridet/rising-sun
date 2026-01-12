@@ -1,5 +1,5 @@
 /*
- * SunPCI IPC Protocol Definitions
+ * SunPCi IPC Protocol Definitions
  *
  * Message format for communication between host and guest via ring buffers.
  * Based on reverse engineering of sunpcidrv and sunpci.vxd.

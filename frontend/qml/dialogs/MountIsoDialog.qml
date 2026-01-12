@@ -5,7 +5,7 @@ import QtQuick.Dialogs
 import QtQuick.Window
 
 // Dialog for mounting an ISO file as a CD-ROM
-// Based on SunPCI CD-ROM analysis from analysis/09-cdrom.md
+// Based on SunPCi CD-ROM analysis from analysis/09-cdrom.md
 Dialog {
     id: mountIsoDialog
     title: "Mount CD-ROM Image"

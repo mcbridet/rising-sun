@@ -1,8 +1,8 @@
 /*
- * SunPCI driver - Ring buffer implementation
+ * SunPCi driver - Ring buffer implementation
  *
  * This implements the ring buffer queues used for IPC between the
- * host and the SunPCI card's x86 guest.
+ * host and the SunPCi card's x86 guest.
  */
 
 #include <linux/kernel.h>

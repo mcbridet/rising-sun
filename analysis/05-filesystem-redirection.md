@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI file system redirection (FSD) subsystem allows the guest operating system to access files on the Solaris host transparently. This creates virtual network drives that map host directories to DOS/Windows drive letters in the guest.
+The SunPCi file system redirection (FSD) subsystem allows the guest operating system to access files on the Solaris host transparently. This creates virtual network drives that map host directories to DOS/Windows drive letters in the guest.
 
 ## Architecture
 
@@ -110,7 +110,7 @@ sunpcnet use X: /d                     # Delete mapping
 **Special Path Variables:**
 | Variable | Meaning |
 |----------|---------|
-| `$SUNPCIIHOME` | SunPCI installation directory |
+| `$SUNPCIIHOME` | SunPCi installation directory |
 | `/` | Root filesystem |
 | `~` | User's home directory |
 

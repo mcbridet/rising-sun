@@ -8,7 +8,7 @@ use nix::ioctl_read;
 use nix::ioctl_readwrite;
 use nix::ioctl_write_ptr;
 
-/// Magic number for SunPCI ioctls
+/// Magic number for SunPCi ioctls
 pub const SUNPCI_IOC_MAGIC: u8 = b'S';
 
 /// Maximum path length (must match kernel)

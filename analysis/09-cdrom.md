@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI provides CD-ROM access to the guest OS through SCSI emulation integrated into the INT 13h disk services library. Unlike the original implementation which supported both physical CD-ROM pass-through and auto-mounting via Solaris Volume Manager, the Rising Sun implementation will focus exclusively on ISO file mounting.
+The SunPCi provides CD-ROM access to the guest OS through SCSI emulation integrated into the INT 13h disk services library. Unlike the original implementation which supported both physical CD-ROM pass-through and auto-mounting via Solaris Volume Manager, the Rising Sun implementation will focus exclusively on ISO file mounting.
 
 ## Architecture
 
@@ -42,7 +42,7 @@ The SunPCI provides CD-ROM access to the guest OS through SCSI emulation integra
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-## Original SunPCI Implementation
+## Original SunPCi Implementation
 
 ### Host Components
 
@@ -69,7 +69,7 @@ The CD-ROM functionality is integrated into the INT 13h library, not a separate 
 
 #### Volume Manager Integration: `action_sunpci.so.1` (12 KB)
 
-**Purpose**: Hooks into Solaris `rmmount` to notify SunPCI when CDs are inserted/ejected.
+**Purpose**: Hooks into Solaris `rmmount` to notify SunPCi when CDs are inserted/ejected.
 
 **NOT NEEDED for Rising Sun** - We're implementing ISO-only mounting.
 
@@ -98,7 +98,7 @@ Located at: `defaults/7.01/dos/nwcdex.exe`
 
 #### Windows 95/98/NT
 
-Uses standard Windows CD-ROM drivers - no SunPCI-specific drivers needed for CD access.
+Uses standard Windows CD-ROM drivers - no SunPCi-specific drivers needed for CD access.
 
 ## SCSI Emulation Details
 
@@ -346,7 +346,7 @@ The Qt6 frontend will provide:
 
 ## Differences: Original vs Rising Sun
 
-| Feature | Original SunPCI | Rising Sun |
+| Feature | Original SunPCi | Rising Sun |
 |---------|-----------------|------------|
 | Physical CD-ROM | ✓ Pass-through | ✗ Not supported |
 | Auto-mount | ✓ Via rmmount | ✗ Not supported |

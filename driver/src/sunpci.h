@@ -1,5 +1,5 @@
 /*
- * SunPCI driver internal header
+ * SunPCi driver internal header
  */
 
 #ifndef _SUNPCI_H
@@ -18,9 +18,9 @@
 #define SUNPCI_DRIVER_NAME "sunpci"
 #define SUNPCI_MAX_DEVICES 4
 
-/* PCI Vendor/Device IDs for SunPCI card */
+/* PCI Vendor/Device IDs for SunPCi card */
 #define SUNPCI_VENDOR_ID    0x108e  /* Sun Microsystems */
-#define SUNPCI_DEVICE_ID    0x5043  /* SunPCI ("PC" in ASCII) */
+#define SUNPCI_DEVICE_ID    0x5043  /* SunPCi ("PC" in ASCII) */
 
 /* Driver version */
 #define SUNPCI_VERSION_MAJOR 0

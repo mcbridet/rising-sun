@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI clipboard integration provides seamless copy/paste functionality between the Solaris host (X11/Motif) and the Windows/DOS guest. The system uses a bidirectional protocol where clipboard changes on either side trigger updates to the other.
+The SunPCi clipboard integration provides seamless copy/paste functionality between the Solaris host (X11/Motif) and the Windows/DOS guest. The system uses a bidirectional protocol where clipboard changes on either side trigger updates to the other.
 
 ## Architecture
 
@@ -275,8 +275,8 @@ The bridge driver provides the ioctl interface for clipboard registration:
 
 **Error Messages:**
 ```
-SunPCI Ioctl(SUNPCI_REGCOPYPASTE) bad arg
-SunPCI Ioctl(SUNPCI_REGCOPYPASTE) bad arg ptr
+SunPCi Ioctl(SUNPCI_REGCOPYPASTE) bad arg
+SunPCi Ioctl(SUNPCI_REGCOPYPASTE) bad arg ptr
 SUNPCI_REGCOPYPASTE: Error: Softc is NULL
 ```
 

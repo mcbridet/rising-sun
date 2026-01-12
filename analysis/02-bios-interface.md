@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI card uses a custom Award BIOS stored in flash memory on the card. The BIOS provides standard PC BIOS services (INT 10h for video, INT 13h for disk, etc.) but hooks these interrupts to communicate with the Solaris host for actual I/O operations.
+The SunPCi card uses a custom Award BIOS stored in flash memory on the card. The BIOS provides standard PC BIOS services (INT 10h for video, INT 13h for disk, etc.) but hooks these interrupts to communicate with the Solaris host for actual I/O operations.
 
 ## BIOS File Structure
 
@@ -76,7 +76,7 @@ Drive Types:
 
 ## Disk Access Architecture
 
-The SunPCI card does **not** emulate an IDE controller. All disk I/O is virtualized through
+The SunPCi card does **not** emulate an IDE controller. All disk I/O is virtualized through
 the host-guest bridge:
 
 | Guest OS | Disk Driver | Access Method |
@@ -188,7 +188,7 @@ bInt13Verbose         @ 0x1c354  // Verbose flag
 
 ### SunPCi Extension: Streaming Writes
 
-The SunPCI BIOS adds a "Streaming Write" mode for better hard disk performance:
+The SunPCi BIOS adds a "Streaming Write" mode for better hard disk performance:
 - Only supported on hard disks (not floppy/CD)
 - Allows bulk writes without per-sector acknowledgment
 - Reduces round-trips between x86 and SPARC

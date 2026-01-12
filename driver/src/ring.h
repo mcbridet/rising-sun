@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Ring buffer definitions
+ * SunPCi driver - Ring buffer definitions
  */
 
 #ifndef _SUNPCI_RING_H
@@ -120,7 +120,7 @@ int sunpci_ring_skip(struct sunpci_ring *ring, u32 len);
 /**
  * sunpci_ring_sync_head - Sync head pointer with hardware
  * @ring: Ring buffer
- * @dev: SunPCI device (for MMIO access)
+ * @dev: SunPCi device (for MMIO access)
  *
  * For hardware-managed rings, reads head from MMIO register.
  */
@@ -129,7 +129,7 @@ void sunpci_ring_sync_head(struct sunpci_ring *ring, struct sunpci_device *dev);
 /**
  * sunpci_ring_sync_tail - Sync tail pointer with hardware
  * @ring: Ring buffer
- * @dev: SunPCI device (for MMIO access)
+ * @dev: SunPCi device (for MMIO access)
  *
  * For hardware-managed rings, writes tail to MMIO register.
  */

@@ -5,7 +5,7 @@ import QtQuick.Dialogs
 import QtQuick.Window
 
 // Dialog for mounting a floppy disk image
-// Based on SunPCI floppy analysis from analysis/10-floppy.md
+// Based on SunPCi floppy analysis from analysis/10-floppy.md
 Dialog {
     id: mountFloppyDialog
     title: "Mount Floppy Image"

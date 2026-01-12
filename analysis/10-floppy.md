@@ -2,7 +2,7 @@
 
 ## Overview
 
-The SunPCI provides floppy disk access to the guest OS through INT 13h BIOS services. The original implementation supported pass-through access to the host's physical floppy drive via Solaris block device access. For Rising Sun, we will support floppy disk image files (raw sector images).
+The SunPCi provides floppy disk access to the guest OS through INT 13h BIOS services. The original implementation supported pass-through access to the host's physical floppy drive via Solaris block device access. For Rising Sun, we will support floppy disk image files (raw sector images).
 
 ## Architecture
 
@@ -15,7 +15,7 @@ The SunPCI provides floppy disk access to the guest OS through INT 13h BIOS serv
 │  └────────────────────────┬─────────────────────────────────────┘  │
 │                           │ BIOS Trap                               │
 │  ┌────────────────────────▼─────────────────────────────────────┐  │
-│  │  Award BIOS (on SunPCI card)                                 │  │
+│  │  Award BIOS (on SunPCi card)                                 │  │
 │  │  Hooks INT 13h, forwards to host                             │  │
 │  └────────────────────────┬─────────────────────────────────────┘  │
 └───────────────────────────┼─────────────────────────────────────────┘
@@ -55,7 +55,7 @@ The SunPCI provides floppy disk access to the guest OS through INT 13h BIOS serv
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
-## Original SunPCI Implementation
+## Original SunPCi Implementation
 
 ### Library: `libint13.so.1.1` (Floppy portion)
 
@@ -100,7 +100,7 @@ Floppy functionality is integrated into the INT 13h library alongside hard disk 
 
 #### Script: `vold_floppy_disable`
 
-**Purpose**: Disable Solaris Volume Manager control of floppy drives so SunPCI can have direct block access.
+**Purpose**: Disable Solaris Volume Manager control of floppy drives so SunPCi can have direct block access.
 
 The script:
 1. Backs up `/etc/vold.conf` to `/etc/vold.conf.beforesunpc`
@@ -405,7 +405,7 @@ The Qt6 frontend will provide:
 
 ## Differences: Original vs Rising Sun
 
-| Feature | Original SunPCI | Rising Sun |
+| Feature | Original SunPCi | Rising Sun |
 |---------|-----------------|------------|
 | Physical floppy | ✓ Pass-through | ✗ Not supported |
 | Image files | ✗ Not supported | ✓ Primary feature |

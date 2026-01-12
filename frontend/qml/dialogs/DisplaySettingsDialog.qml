@@ -7,7 +7,7 @@ import QtQuick.Window
 // Note: Resolution and color depth are controlled by the GUEST OS
 // (via INT 10h or Windows display drivers like spcdisp.drv/sunvideo.dll)
 // This dialog only controls how the host presents the guest output.
-// Based on SunPCI display from analysis/03-display-emulation.md
+// Based on SunPCi display from analysis/03-display-emulation.md
 Dialog {
     id: displaySettingsDialog
     title: "Display Settings"

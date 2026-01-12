@@ -5,7 +5,7 @@ import QtQuick.Dialogs
 import QtQuick.Window
 
 // Dialog for creating a new virtual disk image
-// Based on SunPCI makedisk parameters from analysis/01-virtual-disk-format.md
+// Based on SunPCi makedisk parameters from analysis/01-virtual-disk-format.md
 Dialog {
     id: createDiskDialog
     title: "Create Virtual Disk"

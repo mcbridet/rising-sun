@@ -1,5 +1,5 @@
 /*
- * SunPCI IPC Protocol Implementation
+ * SunPCi IPC Protocol Implementation
  *
  * Handles message send/receive via ring buffers with the guest.
  */

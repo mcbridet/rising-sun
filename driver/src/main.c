@@ -1,8 +1,8 @@
 /*
- * SunPCI driver - main module
+ * SunPCi driver - main module
  *
- * This driver provides an interface for the SunPCI card.
- * The driver will only load if actual SunPCI hardware is detected.
+ * This driver provides an interface for the SunPCi card.
+ * The driver will only load if actual SunPCi hardware is detected.
  */
 
 #include <linux/module.h>
@@ -16,7 +16,7 @@
 #include "sunpci.h"
 
 MODULE_AUTHOR("Rising Sun Project");
-MODULE_DESCRIPTION("SunPCI driver");
+MODULE_DESCRIPTION("SunPCi driver");
 MODULE_VERSION("0.1.0");
 
 /* Global variables */
@@ -186,7 +186,7 @@ static int __init sunpci_init(void)
     /* Initialize PCI driver - this will probe for hardware */
     ret = sunpci_pci_init();
     if (ret) {
-        pr_err("sunpci: no SunPCI hardware found\n");
+        pr_err("sunpci: no SunPCi hardware found\n");
         goto err_class;
     }
 

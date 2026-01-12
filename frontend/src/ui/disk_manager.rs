@@ -55,7 +55,7 @@ mod qobject {
         #[qinvokable]
         fn get_disk_info(self: &DiskManager, path: QString) -> QString;
 
-        /// Check if the disk at path is a valid SunPCI disk image
+        /// Check if the disk at path is a valid SunPCi disk image
         #[qinvokable]
         fn is_valid_disk(self: &DiskManager, path: QString) -> bool;
 
@@ -107,7 +107,7 @@ impl Default for DiskManagerRust {
 impl qobject::DiskManager {
     /// Create a new disk image
     /// 
-    /// Creates a SunPCI-compatible disk image with:
+    /// Creates a SunPCi-compatible disk image with:
     /// - Magic "SPCI" at offset 12
     /// - MBR partition table
     /// - FAT16 filesystem (for sizes > 32MB) or FAT12 (smaller)
@@ -399,9 +399,9 @@ impl qobject::DiskManager {
     /// Get disk information as JSON
     /// 
     /// Returns JSON with fields:
-    /// - valid: bool - whether this is a valid SunPCI disk
+    /// - valid: bool - whether this is a valid SunPCi disk
     /// - size_mb: number - size in megabytes
-    /// - revision: number - SunPCI format revision
+    /// - revision: number - SunPCi format revision
     /// - cylinders: number - CHS cylinders
     /// - heads: number - CHS heads
     /// - sectors: number - CHS sectors per track
@@ -433,7 +433,7 @@ impl qobject::DiskManager {
         }
     }
 
-    /// Check if the disk at path is a valid SunPCI disk image
+    /// Check if the disk at path is a valid SunPCi disk image
     pub fn is_valid_disk(&self, path: QString) -> bool {
         let path_str = path.to_string();
         match read_disk_header(&path_str) {
@@ -452,7 +452,7 @@ impl qobject::DiskManager {
     }
 }
 
-/// SunPCI disk magic number: "SPCI" = 0x53504349
+/// SunPCi disk magic number: "SPCI" = 0x53504349
 const SUNPCI_MAGIC: u32 = 0x53504349;
 
 /// Sector size in bytes
@@ -485,7 +485,7 @@ fn calculate_geometry(size_mb: u32) -> (u16, u8, u8) {
     (cylinders, heads, sectors_per_track)
 }
 
-/// Create a SunPCI-compatible disk image
+/// Create a SunPCi-compatible disk image
 fn create_disk_image(path: &str, size_mb: u32, revision: u8) -> std::io::Result<()> {
     // Expand ~ to home directory
     let expanded_path = if path.starts_with("~/") {
@@ -517,7 +517,7 @@ fn create_disk_image(path: &str, size_mb: u32, revision: u8) -> std::io::Result<
     // Create the MBR (sector 0)
     let mut mbr = [0u8; 512];
     
-    // Add SunPCI magic at offset 12
+    // Add SunPCi magic at offset 12
     mbr[12..16].copy_from_slice(&SUNPCI_MAGIC.to_le_bytes());
     
     // Add revision info at offset 16
@@ -644,11 +644,11 @@ fn create_disk_image(path: &str, size_mb: u32, revision: u8) -> std::io::Result<
 
 /// Disk information parsed from header
 struct DiskInfo {
-    /// Whether this appears to be a SunPCI disk image
+    /// Whether this appears to be a SunPCi disk image
     is_sunpci: bool,
     /// Size in megabytes
     size_mb: u32,
-    /// SunPCI format revision
+    /// SunPCi format revision
     revision: u8,
     /// CHS cylinders
     cylinders: u16,
@@ -693,11 +693,11 @@ fn read_disk_header(path: &str) -> std::io::Result<DiskInfo> {
         ));
     }
     
-    // Check for SunPCI magic at offset 12
+    // Check for SunPCi magic at offset 12
     let magic = u32::from_le_bytes([mbr[12], mbr[13], mbr[14], mbr[15]]);
     let is_sunpci = magic == SUNPCI_MAGIC;
     
-    // Read SunPCI-specific fields if present
+    // Read SunPCi-specific fields if present
     let (revision, cylinders, heads, sectors_per_track, stored_sectors) = if is_sunpci {
         let rev = mbr[16];
         let cyls = u16::from_le_bytes([mbr[18], mbr[19]]);

@@ -432,7 +432,7 @@ impl AppConfig {
         }
     }
 
-    /// Create default drive mappings like original SunPCI
+    /// Create default drive mappings like original SunPCi
     /// Note: By default, no mappings are configured. This function
     /// provides suggested mappings that can be added by the user.
     pub fn suggested_drive_mappings() -> Vec<DriveMapping> {

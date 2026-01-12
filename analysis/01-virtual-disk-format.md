@@ -1,12 +1,12 @@
-# SunPCI Virtual Disk Format Analysis
+# SunPCi Virtual Disk Format Analysis
 
-This document analyzes the virtual disk format used by SunPCI to understand how disk images are created, structured, and accessed.
+This document analyzes the virtual disk format used by SunPCi to understand how disk images are created, structured, and accessed.
 
 ## Overview
 
-SunPCI uses a custom virtual disk format that wraps a standard DOS/MBR disk image with additional metadata. The format includes:
+SunPCi uses a custom virtual disk format that wraps a standard DOS/MBR disk image with additional metadata. The format includes:
 
-1. A SunPCI-specific header with magic number and geometry information
+1. A SunPCi-specific header with magic number and geometry information
 2. Standard DOS MBR and partition table
 3. FAT file system with DOS boot files
 

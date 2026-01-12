@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Filesystem Redirection (FSD) subsystem
+ * SunPCi driver - Filesystem Redirection (FSD) subsystem
  *
  * Provides transparent access to host filesystem from the guest OS.
  * Windows/DOS sees mapped directories as network drives.

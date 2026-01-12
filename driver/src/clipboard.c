@@ -1,5 +1,5 @@
 /*
- * SunPCI driver - Clipboard transfer
+ * SunPCi driver - Clipboard transfer
  *
  * Handles clipboard synchronization between host and guest.
  * The guest runs Windows which uses UTF-16LE for Unicode text.

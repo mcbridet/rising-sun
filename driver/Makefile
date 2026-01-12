@@ -1,4 +1,4 @@
-# Makefile for the SunPCI kernel module
+# Makefile for the SunPCi kernel module
 #
 # Build Options:
 #   KERNELDIR   - Path to kernel build directory (default: current kernel)

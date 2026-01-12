@@ -4,7 +4,7 @@ import QtQuick.Layouts
 import QtQuick.Window
 
 // Dialog for mouse/pointer settings
-// Based on SunPCI mouse analysis from analysis/04-keyboard-mouse.md
+// Based on SunPCi mouse analysis from analysis/04-keyboard-mouse.md
 Dialog {
     id: mouseSettingsDialog
     title: "Mouse Settings"
