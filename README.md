@@ -1,7 +1,7 @@
 # 🌄 Rising Sun
 ### A SunPCi (I) front-end for Linux
 
-Rising Sun is a Rust re-implementation and reverse engineering of the Sun (Oracle) SunPCi software for Solaris on SPARC architectures. It provides a Linux kernel module and a Qt-based frontend for interfacing / interacting with the cards.
+Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) SunPCi software for Solaris on SPARC architectures. It provides a Linux kernel module and a Qt-based frontend for interfacing / interacting with the cards.
 
 #### Supported Cards
 - [SunPCi I](https://www.zx.net.nz/computers/sun/cards/pci/SunPCi/) (Codename Penguin) - P/N 375-0075, 375-0095.
