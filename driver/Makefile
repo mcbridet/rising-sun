@@ -24,9 +24,10 @@ else
     # Otherwise we were called directly from the command line
     KERNELDIR ?= /lib/modules/$(shell uname -r)/build
     PWD := $(shell pwd)
+    NPROC := $(shell nproc)
 
     # Build arguments for cross-compilation
-    BUILD_ARGS := -C $(KERNELDIR) M=$(PWD)
+    BUILD_ARGS := -C $(KERNELDIR) M=$(PWD) -j$(NPROC)
     ifdef ARCH
         BUILD_ARGS += ARCH=$(ARCH)
     endif

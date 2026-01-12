@@ -11,6 +11,8 @@
 #include <linux/mutex.h>
 #include <linux/ktime.h>
 #include <linux/pci.h>
+#include <linux/workqueue.h>
+#include <linux/wait.h>
 
 #include "../include/uapi/sunpci_ioctl.h"
 #include "ring.h"
@@ -148,7 +150,18 @@ struct sunpci_device {
     
     /* Ring buffers for IPC */
     struct sunpci_ring cmd_ring;    /* Commands: host -> guest */
-    struct sunpci_ring rsp_ring;    /* Responses: guest -> host */
+    struct sunpci_ring rsp_ring;    /* Bidirectional: guest -> host requests, host -> guest responses */
+    
+    /* NT named channel support */
+    struct sunpci_channel_registry *channel_registry;
+    
+    /* Request processing workqueue */
+    struct work_struct request_work;
+    
+    /* Wait queues for blocking operations */
+    wait_queue_head_t rsp_wait;         /* Wait for IPC responses */
+    wait_queue_head_t clipboard_wait;   /* Wait for clipboard changes */
+    bool clipboard_changed;             /* Clipboard data updated */
     
     /* Interrupt handling */
     int irq;
@@ -193,6 +206,10 @@ int sunpci_ipc_transact(struct sunpci_device *dev,
 int sunpci_ipc_init(struct sunpci_device *dev);
 void sunpci_ipc_shutdown(struct sunpci_device *dev);
 void sunpci_ipc_handle_responses(struct sunpci_device *dev);
+void sunpci_ipc_process_requests(struct work_struct *work);
+int sunpci_ipc_send_response(struct sunpci_device *dev,
+                             u32 sequence, u16 status,
+                             const void *payload, size_t payload_len);
 
 /* mmap.c */
 int sunpci_mmap(struct file *file, struct vm_area_struct *vma);
@@ -296,6 +313,25 @@ int sunpci_fsd_handle_message(struct sunpci_device *dev,
 void sunpci_fsd_get_stats(struct sunpci_device *dev,
                           u64 *opened, u64 *closed,
                           u64 *read, u64 *written);
+
+/* channel.c - NT named channel support */
+struct sunpci_channel_registry;
+struct sunpci_channel_create_req;
+struct sunpci_channel_create_rsp;
+int sunpci_channel_init(struct sunpci_device *dev);
+void sunpci_channel_cleanup(struct sunpci_device *dev);
+int sunpci_channel_create(struct sunpci_device *dev,
+                          const struct sunpci_channel_create_req *req,
+                          struct sunpci_channel_create_rsp *rsp);
+int sunpci_channel_delete(struct sunpci_device *dev, u32 channel_id);
+int sunpci_channel_get_dispatcher(struct sunpci_device *dev, u32 channel_id);
+int sunpci_channel_handle_nt_disk(struct sunpci_device *dev,
+                                  u32 channel_id,
+                                  const void *request, size_t req_len,
+                                  void *response, size_t *rsp_len);
+void sunpci_dispatch_channel(struct sunpci_device *dev,
+                             u16 command, u32 sequence,
+                             void *payload, size_t payload_len);
 
 /* Exported symbols */
 extern struct class *sunpci_class;

@@ -17,6 +17,7 @@
 
 MODULE_AUTHOR("Rising Sun Project");
 MODULE_DESCRIPTION("SunPCi driver");
+MODULE_LICENSE("GPL");
 MODULE_VERSION("0.1.0");
 
 /* Global variables */
@@ -101,6 +102,8 @@ struct sunpci_device *sunpci_create_device(int minor, struct pci_dev *pdev)
     dev->minor = minor;
     dev->pdev = pdev;
     mutex_init(&dev->mutex);
+    init_waitqueue_head(&dev->rsp_wait);
+    init_waitqueue_head(&dev->clipboard_wait);
     dev->state = SUNPCI_STATE_STOPPED;
     
     /* Default configuration */

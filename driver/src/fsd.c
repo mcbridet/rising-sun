@@ -247,7 +247,7 @@ static int fsd_translate_path(struct sunpci_device *dev,
 static struct fsd_handle *fsd_alloc_handle(struct sunpci_fsd_state *fsd)
 {
     struct fsd_handle *h;
-    unsigned long flags;
+su    unsigned long flags;
     
     h = kzalloc(sizeof(*h), GFP_KERNEL);
     if (!h)
@@ -836,17 +836,27 @@ int sunpci_fsd_handle_message(struct sunpci_device *dev,
     case FSD_CMD_STATFS:
         return fsd_handle_statfs(fsd, payload, len, response, rsp_len);
         
-    /* TODO: Implement remaining commands */
+    /*
+     * Commands not yet implemented - return ENOSYS
+     * These are less commonly used by guest OS file managers
+     */
     case FSD_CMD_SEEK:
+        /* Seek is typically done via file position in READ/WRITE */
     case FSD_CMD_RMDIR:
+        /* Directory removal - similar to DELETE */
     case FSD_CMD_RENAME:
+        /* File/directory rename */
     case FSD_CMD_OPENDIR:
     case FSD_CMD_READDIR:
     case FSD_CMD_CLOSEDIR:
+        /* Directory enumeration - Windows uses FindFirstFile/FindNextFile */
     case FSD_CMD_SETATTR:
+        /* Set file attributes (readonly, hidden, etc.) */
     case FSD_CMD_TRUNCATE:
+        /* Truncate file to specified size */
     case FSD_CMD_LOCK:
     case FSD_CMD_UNLOCK:
+        /* File region locking - for multi-user access */
         pr_debug("sunpci%d: FSD command %04x not yet implemented\n",
                  dev->minor, command);
         return -ENOSYS;

@@ -49,8 +49,9 @@ static int ioctl_get_status(struct sunpci_device *dev, unsigned long arg)
     status.uptime_ns_lo = (u32)uptime_ns;
     status.uptime_ns_hi = (u32)(uptime_ns >> 32);
     
-    /* TODO: Add CPU/memory tracking when emulation is implemented */
+    /* CPU usage would require emulation tracking - report 0 for hardware passthrough */
     status.cpu_usage = 0;
+    /* Memory is configured, not dynamically tracked for real hardware */
     memory_used = (u64)dev->config.memory_mb * 1024ULL * 1024ULL;
     status.memory_used_lo = (u32)memory_used;
     status.memory_used_hi = (u32)(memory_used >> 32);

@@ -397,4 +397,108 @@ struct sunpci_net_stats {
 #define SUNPCI_CMD_TIMEOUT      (HZ * 5)    /* 5 seconds */
 #define SUNPCI_INIT_TIMEOUT     (HZ * 10)   /* 10 seconds */
 
+/*
+ * NT Named Channel Support
+ *
+ * Windows NT bridge.sys uses named channels instead of raw dispatcher IDs.
+ * Channels map string names to dispatcher handlers.
+ */
+
+/* Channel commands (SUNPCI_DISP_CORE extended) */
+#define CORE_CMD_CHANNEL_CREATE     0x0010  /* Create named channel */
+#define CORE_CMD_CHANNEL_DELETE     0x0011  /* Delete channel */
+#define CORE_CMD_CHANNEL_BIND       0x0012  /* Bind to channel */
+#define CORE_CMD_CHANNEL_UNBIND     0x0013  /* Unbind from channel */
+
+/* Channel flags */
+#define CHANNEL_FLAG_EXCLUSIVE      0x0001  /* Only one client allowed */
+#define CHANNEL_FLAG_PERSISTENT     0x0002  /* Survives client disconnect */
+
+/* Maximum channel name length (UTF-16 chars, not bytes) */
+#define SUNPCI_CHANNEL_NAME_MAX     64
+
+/* Well-known channel names */
+#define CHANNEL_NAME_INT13          "NewInt13Dispatcher"
+#define CHANNEL_NAME_VGA            "VGADispatcher"
+#define CHANNEL_NAME_VIDEO          "VideoDispatcher"
+#define CHANNEL_NAME_NETWORK        "NetworkDispatcher"
+#define CHANNEL_NAME_FSD            "FSDDispatcher"
+#define CHANNEL_NAME_CLIPBOARD      "ClipboardDispatcher"
+
+/* Channel create request */
+struct sunpci_channel_create_req {
+    __le32 flags;                           /* CHANNEL_FLAG_* */
+    __le32 name_len;                        /* Length in bytes (UTF-16) */
+    __le16 name[SUNPCI_CHANNEL_NAME_MAX];   /* UTF-16LE channel name */
+} __packed;
+
+/* Channel create response */
+struct sunpci_channel_create_rsp {
+    __le32 status;          /* 0 = success */
+    __le32 channel_id;      /* Assigned channel handle */
+} __packed;
+
+/* Channel bind request */
+struct sunpci_channel_bind_req {
+    __le32 channel_id;      /* Channel handle from create */
+} __packed;
+
+/*
+ * NT emdisk.sys Request Format
+ *
+ * NT uses a different packet format than DOS/Win9x.
+ * The first 5 bytes are a fixed header, followed by command-specific data.
+ */
+struct sunpci_nt_disk_req {
+    __u8  drive_type;       /* Byte 0: drive type (from device extension) */
+    __u8  command;          /* Byte 1: command code (0x0a, 0x0c, 0x0f, etc.) */
+    __u8  size_hi;          /* Byte 2: response size high byte */
+    __u8  size_lo;          /* Byte 3: response size low byte */
+    __u8  drive_num;        /* Byte 4: drive number (0=A, 1=B, 2=C, 3=D, 4=CD) */
+    /* Command-specific data follows */
+} __packed;
+
+/* NT disk command codes */
+#define NT_DISK_CMD_READ        0x0a    /* Read sectors */
+#define NT_DISK_CMD_WRITE       0x0b    /* Write sectors */
+#define NT_DISK_CMD_GET_PARAMS  0x0c    /* Get drive parameters */
+#define NT_DISK_CMD_SCSI        0x0f    /* SCSI CDB passthrough */
+#define NT_DISK_CMD_EXT_INFO    0x10    /* Extended drive info */
+#define NT_DISK_CMD_MEDIA_INFO  0x11    /* Media status */
+
+/* NT SCSI request (follows NT disk header) */
+struct sunpci_nt_scsi_req {
+    __u8  cdb_length;       /* Byte 5: CDB length */
+    __u8  reserved[2];      /* Bytes 6-7: reserved */
+    __le32 xfer_in_len;     /* Bytes 8-11: data-in length */
+    __le32 xfer_out_len;    /* Bytes 12-15: data-out length */
+    __u8  cdb[16];          /* Bytes 16-31: SCSI CDB */
+    /* Write data follows for WRITE commands */
+} __packed;
+
+/* NT response header */
+struct sunpci_nt_disk_rsp {
+    __u8  command;          /* Byte 0: echoed command */
+    __u8  response_type;    /* Byte 1: response type code */
+    __u8  size_hi;          /* Byte 2: payload size (words) high */
+    __u8  size_lo;          /* Byte 3: payload size (words) low */
+    __u8  error_code;       /* Byte 4: INT 13h error status */
+    __u8  error_detail;     /* Byte 5: error detail */
+    __u8  count;            /* Byte 6: sectors transferred */
+    __u8  reserved;         /* Byte 7: reserved */
+    /* Sector data follows for read operations */
+} __packed;
+
+/* NT response type codes */
+#define NT_RSP_DISK_READ        0x97    /* Disk read success */
+#define NT_RSP_GET_PARAMS       0x99    /* Get drive params response */
+#define NT_RSP_SCSI             0x9c    /* SCSI command response */
+#define NT_RSP_EXT_INFO         0x9d    /* Extended info response */
+#define NT_RSP_MEDIA_INFO       0x9e    /* Media info response */
+#define NT_RSP_ERROR            0x9f    /* Error response */
+
+/* NT IOCTLs (from bridge.sys) */
+#define NT_IOCTL_DISK_IO_SG     0x9c41e484  /* Disk I/O with scatter-gather */
+#define NT_IOCTL_DISK_IO_SIMPLE 0x9c41e480  /* Simple disk I/O */
+
 #endif /* SUNPCI_IPC_H */

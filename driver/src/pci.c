@@ -56,9 +56,14 @@ static irqreturn_t sunpci_irq_handler(int irq, void *dev_id)
     sunpci_write32(dev, I21554_SEC_DOORBELL_CLR, doorbell);
 
     /* Handle doorbell events */
+    if (doorbell & SUNPCI_DOORBELL_CMD_READY) {
+        /* Guest has sent a request - queue work to process it */
+        schedule_work(&dev->request_work);
+    }
+
     if (doorbell & SUNPCI_DOORBELL_RSP_READY) {
-        /* Response data available - could wake up waiters */
-        pr_debug("sunpci%d: response ready\n", dev->minor);
+        /* Response data available - wake up waiters */
+        sunpci_ipc_handle_responses(dev);
     }
 
     if (doorbell & SUNPCI_DOORBELL_VGA_UPDATE) {
@@ -214,6 +219,14 @@ static int sunpci_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id
             pr_warn("sunpci: ring buffer setup failed, continuing without IPC\n");
     }
 
+    /* Initialize NT named channel support */
+    ret = sunpci_channel_init(dev);
+    if (ret)
+        pr_warn("sunpci: channel init failed: %d\n", ret);
+
+    /* Initialize work struct for processing guest requests */
+    INIT_WORK(&dev->request_work, sunpci_ipc_process_requests);
+
     /* Request IRQ */
     if (pdev->irq) {
         ret = request_irq(pdev->irq, sunpci_irq_handler, IRQF_SHARED,
@@ -259,6 +272,12 @@ static void sunpci_pci_remove(struct pci_dev *pdev)
     pr_info("sunpci: removing card at %s\n", pci_name(pdev));
 
     if (dev) {
+        /* Cancel any pending request processing work */
+        cancel_work_sync(&dev->request_work);
+
+        /* Cleanup channel registry */
+        sunpci_channel_cleanup(dev);
+
         /* Disable interrupts */
         if (dev->mmio_base)
             sunpci_write32(dev, I21554_SEC_DOORBELL_MASK, 0);

@@ -182,5 +182,7 @@ void sunpci_clip_handle_notify(struct sunpci_device *dev,
 
     dev_dbg(&dev->pdev->dev, "guest clipboard updated: %u bytes\n", length);
 
-    /* TODO: Signal userspace via poll/select that clipboard changed */
+    /* Signal userspace via poll/select that clipboard changed */
+    dev->clipboard_changed = true;
+    wake_up_interruptible(&dev->clipboard_wait);
 }
