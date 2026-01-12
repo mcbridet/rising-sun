@@ -7,17 +7,26 @@ Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) Su
 - [SunPCi I](https://www.zx.net.nz/computers/sun/cards/pci/SunPCi/) (Codename Penguin) - P/N 375-0075, 375-0095.
 - I don't have any others to try and get working sorry. :(
 
-#### Features (will expand later)
+#### What works (will expand later)
 - Display Passthrough (INT10h, GDI, Direct Frame Buffer Access)
 - PS/2 Keyboard and Mouse Emulation
 - Audio Passthrough (**a new feature not present on the Sun version**, using spare BAR space)
 - Virtual Disk Management (.diskimage, SunPCi-specific format)
 - Virtual ISO and Floppy
-- Power Management
+- Power Management (Start/Stop/Suspend)
 - Networking Support (TUN)
 - Bi-directional Clipboard
 - Folder Redirection (using VFS)
 - Other INT13h interrupt handling
+
+#### What doesn't
+- BIOS Flashing.
+- Good performance, I just haven't tested it much yet.
+- SCSI Disk Emulation for DOS/Win9x.
+- Card Power Management.
+- Resizing virtual disk images.
+- Converting non-SunPCi disk images to/from the format.
+
 
 #### Stack
 - Rust (2024) + Qt5 (may switch to GTK2/3 later, QML is quick and dirty) front-end.
