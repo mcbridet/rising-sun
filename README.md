@@ -7,7 +7,7 @@ Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) Su
 - [SunPCi Penguin (I)](https://www.zx.net.nz/computers/sun/cards/pci/SunPCi/) - P/N 375-0075, 375-0095, 32-bit PCI.
 
 #### Unsupported Cards
-In the future I hope to support these cards soon, I just need to grab find them online first.
+In the future I hope to support these cards, I just need to grab find them online first.
 - [SunPCi Chimera (II/IIpro)](https://theretroweb.com/motherboards/s/sun-sunpci-ii) - P/N 375-0131, 375-3051 - 64-bit PCI-X.
 - [SunPCi Bellerophon (III/IIIpro)](https://wiki.preterhuman.net/SunPCi_III), - P/N 375-3116, 375-3203 - 64-bit PCI-X.
 
