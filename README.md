@@ -11,7 +11,7 @@ Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) Su
 - Display Passthrough (INT10h, GDI, Direct Frame Buffer Access)
 - PS/2 Keyboard and Mouse Emulation
 - Audio Passthrough (**a new feature not present on the Sun version**, using spare BAR space)
-- Virtual Disk Management (.diskimage, SunPCi-specific format)
+- Virtual Disk Management (.diskimage, SunPCi-specific format, mostly just Sun adding a magic number in the MBR)
 - Virtual ISO and Floppy
 - Power Management (Start/Stop/Suspend)
 - Networking Support (TUN)
