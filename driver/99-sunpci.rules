@@ -1,0 +1,14 @@
+# SunPCI Device Permissions
+# Install to /etc/udev/rules.d/99-sunpci.rules
+#
+# After installing, run:
+#   sudo udevadm control --reload-rules
+#   sudo udevadm trigger
+#
+# Add users to the 'sunpci' group:
+#   sudo groupadd sunpci
+#   sudo usermod -aG sunpci $USER
+#   # Log out and back in for group membership to take effect
+
+# Grant read/write access to sunpci group
+KERNEL=="sunpci[0-9]*", GROUP="sunpci", MODE="0660"

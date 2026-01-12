@@ -1,0 +1,21 @@
+module dialogs
+
+# Disk Management
+CreateDiskDialog 1.0 CreateDiskDialog.qml
+DiskPropertiesDialog 1.0 DiskPropertiesDialog.qml
+
+# Display
+DisplaySettingsDialog 1.0 DisplaySettingsDialog.qml
+
+# Input
+KeyboardSettingsDialog 1.0 KeyboardSettingsDialog.qml
+MouseSettingsDialog 1.0 MouseSettingsDialog.qml
+
+# Storage
+DriveMappingDialog 1.0 DriveMappingDialog.qml
+MountIsoDialog 1.0 MountIsoDialog.qml
+MountFloppyDialog 1.0 MountFloppyDialog.qml
+
+# Network & Integration
+ClipboardSettingsDialog 1.0 ClipboardSettingsDialog.qml
+NetworkSettingsDialog 1.0 NetworkSettingsDialog.qml

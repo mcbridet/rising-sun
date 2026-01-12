@@ -1,0 +1,24 @@
+# Build configuration for Rising Sun
+
+# Default build settings
+[build]
+# Uncomment to build for Pentium III by default
+# target = "i686-unknown-linux-gnu"
+
+# Pentium III target (32-bit x86 with SSE)
+[target.i686-unknown-linux-gnu]
+rustflags = ["-C", "target-cpu=pentium3"]
+
+# Native x86_64 optimizations for development
+[target.x86_64-unknown-linux-gnu]
+rustflags = ["-C", "target-cpu=native"]
+
+# Build profiles
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true
+
+[profile.release-p3]
+inherits = "release"
+# Pentium III specific release profile

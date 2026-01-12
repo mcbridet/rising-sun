@@ -1,0 +1,6 @@
+# Kbuild file for the SunPCI kernel module
+
+obj-m := sunpci.o
+sunpci-objs := src/main.o src/pci.o src/ioctl.o src/ring.o src/ipc.o src/mmap.o src/input.o src/clipboard.o src/storage.o src/network.o src/vga.o src/video.o src/audio.o src/fsd.o
+
+ccflags-y := -I$(src)/include -I$(src)/src -DDEBUG
