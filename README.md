@@ -33,7 +33,7 @@ In the future I hope to support these cards, I just need to grab find them onlin
 - Good performance, I just haven't tested it much yet.
 
 #### Stack
-- A Rust + Qt5 front-end (may switch to GTK2/3
+- A Rust + Qt5 front-end (may switch to GTK2/3 for improved host compatibility).
 - Kernel module (just in C). Tested on Linux ~6.18.
 - A Rust common module to bind the two together.
 
