@@ -129,36 +129,37 @@ jobs:
           cp driver/Kbuild kernel-module/
           
           # Create install script
-          cat > kernel-module/install.sh << 'EOF'
-#!/bin/bash
-# Install SunPCi kernel module via DKMS
-set -e
+          cat > kernel-module/install.sh << 'INSTALL_SCRIPT'
+          #!/bin/bash
+          # Install SunPCi kernel module via DKMS
+          set -e
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-VERSION="0.1.0"
-MODULE_NAME="sunpci"
+          SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+          VERSION="0.1.0"
+          MODULE_NAME="sunpci"
 
-echo "Installing $MODULE_NAME kernel module..."
+          echo "Installing $MODULE_NAME kernel module..."
 
-# Copy source to DKMS directory
-sudo mkdir -p /usr/src/${MODULE_NAME}-${VERSION}
-sudo cp -r "$SCRIPT_DIR"/src /usr/src/${MODULE_NAME}-${VERSION}/
-sudo cp -r "$SCRIPT_DIR"/include /usr/src/${MODULE_NAME}-${VERSION}/
-sudo cp "$SCRIPT_DIR"/Makefile /usr/src/${MODULE_NAME}-${VERSION}/
-sudo cp "$SCRIPT_DIR"/Kbuild /usr/src/${MODULE_NAME}-${VERSION}/
-sudo cp "$SCRIPT_DIR"/dkms.conf /usr/src/${MODULE_NAME}-${VERSION}/
+          # Copy source to DKMS directory
+          sudo mkdir -p /usr/src/${MODULE_NAME}-${VERSION}
+          sudo cp -r "$SCRIPT_DIR"/src /usr/src/${MODULE_NAME}-${VERSION}/
+          sudo cp -r "$SCRIPT_DIR"/include /usr/src/${MODULE_NAME}-${VERSION}/
+          sudo cp "$SCRIPT_DIR"/Makefile /usr/src/${MODULE_NAME}-${VERSION}/
+          sudo cp "$SCRIPT_DIR"/Kbuild /usr/src/${MODULE_NAME}-${VERSION}/
+          sudo cp "$SCRIPT_DIR"/dkms.conf /usr/src/${MODULE_NAME}-${VERSION}/
 
-# Install udev rules
-sudo cp "$SCRIPT_DIR"/99-sunpci.rules /etc/udev/rules.d/
-sudo udevadm control --reload-rules
+          # Install udev rules
+          sudo cp "$SCRIPT_DIR"/99-sunpci.rules /etc/udev/rules.d/
+          sudo udevadm control --reload-rules
 
-# Register with DKMS
-sudo dkms add -m ${MODULE_NAME} -v ${VERSION} || true
-sudo dkms build -m ${MODULE_NAME} -v ${VERSION}
-sudo dkms install -m ${MODULE_NAME} -v ${VERSION}
+          # Register with DKMS
+          sudo dkms add -m ${MODULE_NAME} -v ${VERSION} || true
+          sudo dkms build -m ${MODULE_NAME} -v ${VERSION}
+          sudo dkms install -m ${MODULE_NAME} -v ${VERSION}
 
-echo "Done! Load the module with: sudo modprobe sunpci"
-EOF
+          echo "Done! Load the module with: sudo modprobe sunpci"
+          INSTALL_SCRIPT
+          sed -i 's/^          //' kernel-module/install.sh
           chmod +x kernel-module/install.sh
 
       - name: Upload kernel module artifact
