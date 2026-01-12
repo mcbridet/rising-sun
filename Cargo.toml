@@ -9,6 +9,7 @@ resolver = "2"
 version = "0.1.0"
 edition = "2024"
 description = "SunPCi software for mere mortals"
+license = "LicenseRef-Proprietary"
 repository = "https://github.com/yourusername/rising-sun"
 
 [workspace.dependencies]

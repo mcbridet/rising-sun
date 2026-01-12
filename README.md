@@ -4,23 +4,24 @@
 Rising Sun is a Rust re-implementation and reverse engineering of the Sun (Oracle) SunPCi software for Solaris on SPARC architectures. It provides a Linux kernel module and a Qt-based frontend for interfacing / interacting with the cards.
 
 #### Supported Cards
-- [SunPCi I](https://www.zx.net.nz/computers/sun/cards/pci/SunPCi/SunPCi) (Codename Penguin) - P/N 375-0075, 375-0095.
+- [SunPCi I](https://www.zx.net.nz/computers/sun/cards/pci/SunPCi/) (Codename Penguin) - P/N 375-0075, 375-0095.
 - I don't have any others to try and get working sorry. :(
 
 #### Features (will expand later)
 - Display Passthrough (INT10h, GDI, Direct Frame Buffer Access)
-- Audio Passthrough (**not implemented on the original version**)
+- PS/2 Keyboard and Mouse Emulation
+- Audio Passthrough (**a new feature not present on the Sun version**, using spare BAR space)
 - Virtual Disk Management (.diskimage, SunPCi-specific format)
 - Virtual ISO and Floppy
+- Power Management
 - Networking Support (TUN)
 - Bi-directional Clipboard
 - Folder Redirection (using VFS)
-
+- Other INT13h interrupt handling
 
 #### Stack
 - Rust (2024) + Qt5 (may switch to GTK2/3 later, QML is quick and dirty) front-end.
-- Kernel module "back-end".
-- Low latency, ring buffered audio using `cpal`
+- Kernel module (just in C).
 
 
 #### Usage

@@ -1,4 +1,4 @@
-# SunPCi Pixel Transfer Deep Dive
+# SunPCi Pixel Transfer
 
 ## Executive Summary
 
