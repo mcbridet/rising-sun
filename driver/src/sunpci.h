@@ -215,6 +215,8 @@ void sunpci_clip_handle_notify(struct sunpci_device *dev,
 /* storage.c */
 struct sunpci_storage_req;
 struct sunpci_storage_rsp;
+struct sunpci_scsi_req;
+struct sunpci_scsi_rsp;
 int sunpci_storage_mount_disk(struct sunpci_device *dev,
                               u32 slot, const char *path, u32 flags);
 int sunpci_storage_unmount_disk(struct sunpci_device *dev, u32 slot);
@@ -227,6 +229,10 @@ int sunpci_storage_handle_request(struct sunpci_device *dev,
                                   const struct sunpci_storage_req *req,
                                   struct sunpci_storage_rsp *rsp,
                                   void *data_buf, size_t data_len);
+int sunpci_storage_scsi_command(struct sunpci_device *dev,
+                                const struct sunpci_scsi_req *req,
+                                struct sunpci_scsi_rsp *rsp,
+                                void *data_buf, size_t data_len);
 void sunpci_storage_cleanup(struct sunpci_device *dev);
 
 /* network.c */

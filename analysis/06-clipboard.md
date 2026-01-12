@@ -139,7 +139,7 @@ XClipboardData: %s
 |----------|---------|
 | `DEVEXTENSIONS` | Enable device extensions mode |
 
-### 2. Main Emulator Integration (sunpcbinary)
+### 2. Main Integration (sunpcbinary)
 
 The `sunpcbinary` uses Motif clipboard API (Xm) for X11 integration:
 

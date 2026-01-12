@@ -301,6 +301,138 @@ pub struct FloppySlot {
     pub drive: u32,
 }
 
+// ============================================================================
+// SCSI Structures (for CD-ROM)
+// ============================================================================
+
+/// Maximum CDB length
+pub const SCSI_CDB_MAX_LEN: usize = 16;
+
+/// Maximum sense data length (fixed format)
+pub const SCSI_SENSE_MAX_LEN: usize = 18;
+
+/// SCSI data direction
+pub mod scsi_direction {
+    pub const NONE: u32 = 0;
+    pub const READ: u32 = 1;
+    pub const WRITE: u32 = 2;
+}
+
+/// SCSI status codes
+pub mod scsi_status {
+    pub const GOOD: u8 = 0x00;
+    pub const CHECK_CONDITION: u8 = 0x02;
+    pub const BUSY: u8 = 0x08;
+}
+
+/// SCSI command request (for CD-ROM SCSI pass-through)
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct ScsiRequest {
+    /// SCSI Command Descriptor Block
+    pub cdb: [u8; SCSI_CDB_MAX_LEN],
+    /// Actual CDB length (6, 10, 12, or 16)
+    pub cdb_len: u32,
+    /// Data direction (scsi_direction::*)
+    pub data_direction: u32,
+    /// Expected data transfer length
+    pub data_len: u32,
+}
+
+impl Default for ScsiRequest {
+    fn default() -> Self {
+        Self {
+            cdb: [0; SCSI_CDB_MAX_LEN],
+            cdb_len: 0,
+            data_direction: scsi_direction::NONE,
+            data_len: 0,
+        }
+    }
+}
+
+impl ScsiRequest {
+    /// Create a new SCSI request with a 6-byte CDB
+    pub fn new_cdb6(cdb: [u8; 6]) -> Self {
+        let mut req = Self::default();
+        req.cdb[..6].copy_from_slice(&cdb);
+        req.cdb_len = 6;
+        req
+    }
+
+    /// Create a new SCSI request with a 10-byte CDB
+    pub fn new_cdb10(cdb: [u8; 10]) -> Self {
+        let mut req = Self::default();
+        req.cdb[..10].copy_from_slice(&cdb);
+        req.cdb_len = 10;
+        req
+    }
+
+    /// Set data direction and expected length for read operations
+    pub fn with_read(mut self, len: u32) -> Self {
+        self.data_direction = scsi_direction::READ;
+        self.data_len = len;
+        self
+    }
+}
+
+/// SCSI command response
+#[repr(C)]
+#[derive(Debug, Clone, Copy)]
+pub struct ScsiResponse {
+    /// SCSI status (0x00=GOOD, 0x02=CHECK CONDITION)
+    pub status: u8,
+    /// Sense data length (if status != GOOD)
+    pub sense_len: u8,
+    /// Reserved for alignment
+    pub reserved: [u8; 2],
+    /// Actual data transferred
+    pub data_len: u32,
+    /// Sense data (if CHECK CONDITION)
+    pub sense: [u8; SCSI_SENSE_MAX_LEN],
+}
+
+impl Default for ScsiResponse {
+    fn default() -> Self {
+        Self {
+            status: scsi_status::GOOD,
+            sense_len: 0,
+            reserved: [0; 2],
+            data_len: 0,
+            sense: [0; SCSI_SENSE_MAX_LEN],
+        }
+    }
+}
+
+impl ScsiResponse {
+    /// Check if the command completed successfully
+    pub fn is_good(&self) -> bool {
+        self.status == scsi_status::GOOD
+    }
+
+    /// Check if a CHECK CONDITION status was returned
+    pub fn is_check_condition(&self) -> bool {
+        self.status == scsi_status::CHECK_CONDITION
+    }
+
+    /// Get the sense key from sense data (if available)
+    pub fn sense_key(&self) -> Option<u8> {
+        if self.sense_len >= 3 {
+            Some(self.sense[2] & 0x0F)
+        } else {
+            None
+        }
+    }
+
+    /// Get the additional sense code (ASC) from sense data
+    pub fn asc(&self) -> Option<u8> {
+        if self.sense_len >= 13 {
+            Some(self.sense[12])
+        } else {
+            None
+        }
+    }
+}
+
 /// Key event flags
 pub mod key_flags {
     pub const PRESSED: u32 = 1 << 0;

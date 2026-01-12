@@ -4,6 +4,7 @@ pub mod config;
 pub mod config_storage;
 pub mod driver;
 pub mod ioctl;
+pub mod scsi;
 pub mod types;
 
 pub use config::*;

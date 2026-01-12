@@ -105,6 +105,7 @@
 #define STORAGE_CMD_EJECT       0x000A  /* Eject media (CD-ROM/floppy) */
 #define STORAGE_CMD_MOUNT       0x000B  /* Mount media notification */
 #define STORAGE_CMD_UNMOUNT     0x000C  /* Unmount media notification */
+#define STORAGE_CMD_SCSI        0x000D  /* SCSI CDB pass-through (CD-ROM) */
 
 /*
  * Message header - prepended to all IPC messages
@@ -302,6 +303,42 @@ struct sunpci_storage_params {
     __le32 total_hi;    /* Total sectors (high 32 bits) */
     __le32 sector_size; /* Bytes per sector (typically 512 or 2048) */
 } __packed;
+
+/*
+ * SCSI CDB pass-through for CD-ROM
+ * Used for INQUIRY, READ TOC, MODE SENSE, etc.
+ */
+#define SCSI_CDB_MAX_LEN        16      /* Maximum CDB length */
+#define SCSI_SENSE_MAX_LEN      18      /* Fixed-format sense data */
+#define SCSI_DATA_MAX_LEN       65536   /* Max data transfer */
+
+/* SCSI request header - sent from guest */
+struct sunpci_scsi_req {
+    __u8  cdb[SCSI_CDB_MAX_LEN];    /* SCSI Command Descriptor Block */
+    __le32 cdb_len;                  /* Actual CDB length (6, 10, 12, 16) */
+    __le32 data_direction;           /* 0=none, 1=read, 2=write */
+    __le32 data_len;                 /* Expected data transfer length */
+    /* Write data follows if data_direction == 2 */
+} __packed;
+
+#define SCSI_DIR_NONE   0
+#define SCSI_DIR_READ   1
+#define SCSI_DIR_WRITE  2
+
+/* SCSI response header - sent to guest */
+struct sunpci_scsi_rsp {
+    __u8  status;                    /* SCSI status (0x00=GOOD, 0x02=CHECK) */
+    __u8  sense_len;                 /* Sense data length (if status != GOOD) */
+    __u8  reserved[2];
+    __le32 data_len;                 /* Actual data transferred */
+    __u8  sense[SCSI_SENSE_MAX_LEN]; /* Sense data (if CHECK CONDITION) */
+    /* Read data follows if data_len > 0 */
+} __packed;
+
+/* SCSI status codes */
+#define SCSI_STATUS_GOOD            0x00
+#define SCSI_STATUS_CHECK_CONDITION 0x02
+#define SCSI_STATUS_BUSY            0x08
 
 /* INT 13h status codes */
 #define STORAGE_STATUS_OK           0x00

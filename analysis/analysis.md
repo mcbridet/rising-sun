@@ -22,7 +22,7 @@ SunPCi was a hardware/software product from Sun Microsystems that allowed SPARC-
 │                         User Space                               │
 │  ┌──────────────┐  ┌──────────────┐  ┌────────────────────────┐ │
 │  │   sunpci     │  │ sunpcbinary  │  │  Shared Libraries      │ │
-│  │ (shell script)│──►│ (main emulator)│◄──│ libvga, libvideo, etc │ │
+│  │ (shell script)│──►│ (main app )│◄──│ libvga, libvideo, etc │ │
 │  └──────────────┘  └──────┬───────┘  └────────────────────────┘ │
 │                           │                                      │
 │                           │ ioctl                                │
@@ -75,7 +75,7 @@ Command-line flags:
 - `-f` : Unknown (consumed by script)
 - `-c` : Unknown (passed to sunpcbinary)
 
-#### sunpcbinary (Core Emulator)
+#### sunpcbinary
 
 The main emulation engine. SPARC 32-bit ELF binary (~441KB). This is the heart of the system that:
 - Interfaces with the kernel driver

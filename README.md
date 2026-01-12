@@ -1,7 +1,7 @@
 # 🌄 Rising Sun
 ### A SunPCi (I) front-end for Linux
 
-Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) SunPCi software for Solaris on SPARC architectures. It provides a Linux kernel module and a Qt-based frontend for interfacing / interacting with the cards.
+Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) SunPCi host driver / front-end for Solaris on SPARC architectures. It provides a Linux kernel module and a Qt-based frontend for interfacing / interacting with the cards.
 
 #### Supported Cards
 - [SunPCi I](https://www.zx.net.nz/computers/sun/cards/pci/SunPCi/) (Codename Penguin) - P/N 375-0075, 375-0095.
@@ -12,7 +12,7 @@ Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) Su
 - PS/2 Keyboard and Mouse Emulation
 - Audio Passthrough (**a new feature not present on the Sun version**, using spare BAR space)
 - Virtual Disk Management (.diskimage, SunPCi-specific format, mostly just Sun adding a magic number in the MBR)
-- Virtual ISO and Floppy
+- Virtual CD-ROM (ISO9660 / SCSI-2 / INT13h) and 2x Virtual Floppy Drives. 
 - Power Management (Start/Stop/Suspend)
 - Networking Support (TUN)
 - Bi-directional Clipboard
@@ -21,17 +21,16 @@ Rising Sun is a re-implementation and reverse engineering of the Sun (Oracle) Su
 
 #### What doesn't
 - BIOS Flashing.
-- Good performance, I just haven't tested it much yet.
-- SCSI Disk Emulation for DOS/Win9x.
-- Card Power Management.
+- Card-level PCI Power Management.
+- Fast disk emulation (Using the `emdisk` NT/2k driver instead of INT13h).
 - Resizing virtual disk images.
 - Converting non-SunPCi disk images to/from the format.
-
+- Good performance, I just haven't tested it much yet.
 
 #### Stack
-- Rust (2024) + Qt5 (may switch to GTK2/3 later, QML is quick and dirty) front-end.
-- Kernel module (just in C).
-
+- A Rust + Qt5 front-end (may switch to GTK2/3
+- Kernel module (just in C). Tested on Linux ~6.18.
+- A Rust common module to bind the two together.
 
 #### Usage
 Let me test it out a bit more first.... if you are impatient:
