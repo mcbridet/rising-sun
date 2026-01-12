@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: GPL-2.0
 /*
  * SunPCI driver - main module
  *
@@ -16,7 +15,6 @@
 
 #include "sunpci.h"
 
-MODULE_LICENSE("GPL");
 MODULE_AUTHOR("Rising Sun Project");
 MODULE_DESCRIPTION("SunPCI driver");
 MODULE_VERSION("0.1.0");

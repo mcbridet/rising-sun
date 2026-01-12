@@ -9,7 +9,6 @@ resolver = "2"
 version = "0.1.0"
 edition = "2024"
 description = "SunPCI software for mere mortals"
-license = "GPL-2.0-or-later"
 repository = "https://github.com/yourusername/rising-sun"
 
 [workspace.dependencies]
