@@ -725,16 +725,22 @@ static void sunpci_dispatch_clipboard(struct sunpci_device *dev,
     case CLIP_CMD_GET:
         /* Guest requesting host clipboard - send it */
         {
-            struct sunpci_clipboard clip;
-            int ret = sunpci_clip_get(dev, &clip);
-            if (ret == 0 && clip.length > 0) {
+            struct sunpci_clipboard *clip;
+            clip = kmalloc(sizeof(*clip), GFP_KERNEL);
+            if (!clip) {
+                sunpci_ipc_send_response(dev, sequence, SUNPCI_RSP_ERROR,
+                                        NULL, 0);
+                break;
+            }
+            int ret = sunpci_clip_get(dev, clip);
+            if (ret == 0 && clip->length > 0) {
                 struct sunpci_clip_data *msg;
-                size_t msg_len = sizeof(*msg) + clip.length;
+                size_t msg_len = sizeof(*msg) + clip->length;
                 msg = kmalloc(msg_len, GFP_KERNEL);
                 if (msg) {
-                    msg->format = cpu_to_le32(clip.format);
-                    msg->length = cpu_to_le32(clip.length);
-                    memcpy(msg + 1, clip.data, clip.length);
+                    msg->format = cpu_to_le32(clip->format);
+                    msg->length = cpu_to_le32(clip->length);
+                    memcpy(msg + 1, clip->data, clip->length);
                     sunpci_ipc_send_response(dev, sequence, SUNPCI_RSP_SUCCESS,
                                             msg, msg_len);
                     kfree(msg);
@@ -746,6 +752,7 @@ static void sunpci_dispatch_clipboard(struct sunpci_device *dev,
                 sunpci_ipc_send_response(dev, sequence, SUNPCI_RSP_SUCCESS,
                                         NULL, 0);
             }
+            kfree(clip);
         }
         break;
 

@@ -1,8 +1,8 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Dialogs
-import QtQuick.Window
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
+import QtQuick.Dialogs 1.1 as Dialogs
 
 // Dialog for mounting a floppy disk image
 // Based on SunPCi floppy analysis from analysis/10-floppy.md
@@ -192,15 +192,15 @@ Dialog {
     }
     }  // ScrollView
 
-    FileDialog {
+    Dialogs.FileDialog {
         id: floppyFileDialog
         title: "Select Floppy Image"
-        fileMode: FileDialog.OpenFile
+        selectExisting: true
         nameFilters: ["Floppy Images (*.img *.ima *.flp *.vfd)", "All Files (*)"]
-        currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+        folder: shortcuts.home
 
         onAccepted: {
-            let path = selectedFile.toString().replace("file://", "")
+            let path = fileUrl.toString().replace("file://", "")
             floppyPathField.text = path
             mountFloppyDialog.selectedFloppyPath = path
         }
@@ -243,21 +243,27 @@ Dialog {
             }
         }
 
-        FileDialog {
+        Dialogs.FileDialog {
             id: saveFloppyDialog
             title: "Save Floppy Image As"
-            fileMode: FileDialog.SaveFile
+            selectExisting: false
             nameFilters: ["Floppy Images (*.img)", "All Files (*)"]
 
             onAccepted: {
-                newFloppyPathField.text = selectedFile.toString().replace("file://", "")
+                newFloppyPathField.text = fileUrl.toString().replace("file://", "")
             }
         }
 
         onAccepted: {
-            // TODO: Create the floppy image file
-            floppyPathField.text = newFloppyPathField.text
-            mountFloppyDialog.selectedFloppyPath = newFloppyPathField.text
+            // Create the floppy image file
+            let fmt = formatCombo.model.get(formatCombo.currentIndex)
+            let path = newFloppyPathField.text
+            if (path && fmt && diskManager.create_floppy(path, fmt.size)) {
+                floppyPathField.text = path
+                mountFloppyDialog.selectedFloppyPath = path
+            } else {
+                console.error("Failed to create floppy image: " + path)
+            }
         }
     }
 

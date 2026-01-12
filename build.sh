@@ -9,6 +9,9 @@ cd "$SCRIPT_DIR"
 BUILD_TYPE="${1:-debug}"
 BUILD_P3="${BUILD_P3:-0}"
 
+# Force Qt5 for better cross-distro compatibility
+export QT_VERSION_MAJOR=5
+
 echo "=== Building Rising Sun ==="
 
 # Build for native x86_64

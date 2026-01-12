@@ -1,7 +1,7 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Window
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 
 // Dialog for keyboard and input settings
 // Based on SunPCi keyboard analysis from analysis/04-keyboard-mouse.md

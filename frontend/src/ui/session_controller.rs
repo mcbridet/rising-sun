@@ -177,9 +177,8 @@ impl qobject::SessionController {
         // Load configuration
         let config = load_config().unwrap_or_default();
 
-        // Build ioctl config
+        // Build ioctl config (memory is physical on SunPCi card, not configurable)
         let mut ioctl_config = IoctlSessionConfig::default();
-        ioctl_config.memory_mb = 64; // TODO: Make configurable
 
         // Set flags based on config
         let mut session_flags = 0u32;

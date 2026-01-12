@@ -32,7 +32,7 @@ static int ioctl_get_status(struct sunpci_device *dev, unsigned long arg)
 {
     struct sunpci_status status = {0};
     ktime_t now;
-    u64 uptime_ns, memory_used;
+    u64 uptime_ns;
 
     mutex_lock(&dev->mutex);
     
@@ -45,16 +45,9 @@ static int ioctl_get_status(struct sunpci_device *dev, unsigned long arg)
         uptime_ns = 0;
     }
     
-    /* Split 64-bit values into lo/hi for 32-bit compat */
+    /* Split 64-bit uptime into lo/hi for 32-bit compat */
     status.uptime_ns_lo = (u32)uptime_ns;
     status.uptime_ns_hi = (u32)(uptime_ns >> 32);
-    
-    /* CPU usage would require emulation tracking - report 0 for hardware passthrough */
-    status.cpu_usage = 0;
-    /* Memory is configured, not dynamically tracked for real hardware */
-    memory_used = (u64)dev->config.memory_mb * 1024ULL * 1024ULL;
-    status.memory_used_lo = (u32)memory_used;
-    status.memory_used_hi = (u32)(memory_used >> 32);
     
     mutex_unlock(&dev->mutex);
 
@@ -71,10 +64,6 @@ static int ioctl_start_session(struct sunpci_device *dev, unsigned long arg)
 
     if (copy_from_user(&cfg, (void __user *)arg, sizeof(cfg)))
         return -EFAULT;
-
-    /* Validate config */
-    if (cfg.memory_mb < 1 || cfg.memory_mb > 256)
-        return -EINVAL;
 
     mutex_lock(&dev->mutex);
     
@@ -99,8 +88,7 @@ static int ioctl_start_session(struct sunpci_device *dev, unsigned long arg)
     dev->state = SUNPCI_STATE_RUNNING;
     dev->start_time = ktime_get();
     
-    pr_info("sunpci%d: session started (memory=%uMB)\n", 
-            dev->minor, cfg.memory_mb);
+    pr_info("sunpci%d: session started\n", dev->minor);
 
 out:
     mutex_unlock(&dev->mutex);

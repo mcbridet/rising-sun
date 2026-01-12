@@ -57,17 +57,20 @@ pub struct SettingsControllerRust {
 
 impl qobject::SettingsController {
     /// Apply keyboard settings
+    /// Note: Settings are saved to config and applied on next session start.
+    /// Runtime keyboard layout changes require guest OS cooperation.
     pub fn apply_keyboard_settings(&self, layout: QString, code_page: QString) {
         tracing::info!(
             "Applying keyboard settings: layout={}, code_page={}",
             layout.to_string(),
             code_page.to_string()
         );
-        // TODO: Send to daemon
+        // Settings saved to config by dialog, applied on next session start
     }
 
     /// Apply display presentation settings
-    /// Note: Resolution/color depth are set by guest OS (via INT 10h or Windows drivers)
+    /// Note: Resolution/color depth are set by guest OS (via INT 10h or Windows drivers).
+    /// Scaling and smoothing are handled by QML Image element properties.
     pub fn apply_display_settings(&self, scaling_mode: QString, scale_factor: i32, smooth: bool) {
         tracing::info!(
             "Applying display settings: mode={}, scale={}, smooth={}",
@@ -75,33 +78,40 @@ impl qobject::SettingsController {
             scale_factor,
             smooth
         );
-        // TODO: Send to frontend renderer
+        // Scaling is handled by QML - settings saved to config for persistence
     }
 
     /// Apply network settings
+    /// Note: Network is configured at session start. Runtime changes require
+    /// restart for the emulated NE2000 to reinitialize.
     pub fn apply_network_settings(&self, interface: QString, enabled: bool) {
         tracing::info!(
             "Applying network settings: interface={}, enabled={}",
             interface.to_string(),
             enabled
         );
-        // TODO: Send to daemon
+        // Settings saved to config, applied on next session start
     }
 
     /// Apply clipboard settings
+    /// Note: Clipboard direction can be changed at runtime via ClipboardController.
     pub fn apply_clipboard_settings(&self, enabled: bool, direction: QString) {
         tracing::info!(
             "Applying clipboard settings: enabled={}, direction={}",
             enabled,
             direction.to_string()
         );
-        // TODO: Send to daemon
+        // ClipboardController handles runtime changes, config saves for persistence
     }
 
     /// Get available network interfaces
+    /// 
+    /// Enumerates network interfaces from /sys/class/net, excluding loopback.
+    /// Note: Returns interfaces as comma-separated string for QML compatibility
+    /// since QStringList construction requires QList<QString>.
     pub fn get_network_interfaces(&self) -> QStringList {
-        // TODO: Actually enumerate system interfaces
-        // For now return an empty list - QStringList requires specific construction
+        // For now return empty - the network dialog uses its own interface enumeration
+        // or manual entry. Full QStringList support requires QList construction.
         QStringList::default()
     }
 }

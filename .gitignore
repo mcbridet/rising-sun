@@ -8,4 +8,6 @@ driver/*.mod.c
 driver/.*.cmd
 driver/Module.symvers
 driver/modules.order
+driver/src/*.o
+driver/src/.*.cmd
 /SUNWspci

@@ -1,8 +1,8 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Dialogs
-import QtQuick.Window
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
+import QtQuick.Dialogs 1.1 as Dialogs
 
 // Dialog for creating a new virtual disk image
 // Based on SunPCi makedisk parameters from analysis/01-virtual-disk-format.md
@@ -190,15 +190,15 @@ Dialog {
     }
     }  // ScrollView
 
-    FileDialog {
+    Dialogs.FileDialog {
         id: saveFileDialog
         title: "Save Disk Image As"
-        fileMode: FileDialog.SaveFile
+        selectExisting: false
         nameFilters: ["Disk Images (*.diskimage)", "All Files (*)"]
-        currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+        folder: shortcuts.home
         
         onAccepted: {
-            createDiskDialog.selectedPath = selectedFile.toString().replace("file://", "")
+            createDiskDialog.selectedPath = fileUrl.toString().replace("file://", "")
             diskPathField.text = createDiskDialog.selectedPath
         }
     }

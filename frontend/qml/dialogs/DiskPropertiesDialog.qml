@@ -1,7 +1,7 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Window
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 
 // Dialog for viewing/editing disk image properties
 // Based on SunPCi disk format from analysis/01-virtual-disk-format.md

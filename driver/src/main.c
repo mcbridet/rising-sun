@@ -106,8 +106,7 @@ struct sunpci_device *sunpci_create_device(int minor, struct pci_dev *pdev)
     init_waitqueue_head(&dev->clipboard_wait);
     dev->state = SUNPCI_STATE_STOPPED;
     
-    /* Default configuration */
-    dev->config.memory_mb = 64;
+    /* Default configuration - memory is physical on card, not configurable */
     dev->config.flags = SUNPCI_FLAG_NETWORK_ENABLED | 
                         SUNPCI_FLAG_CLIPBOARD_ENABLED |
                         SUNPCI_FLAG_CLIPBOARD_TO_HOST |

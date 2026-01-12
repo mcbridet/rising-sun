@@ -95,13 +95,14 @@ pub enum SessionState {
 /// 
 /// Note: Uses explicit lo/hi u32 pairs for 64-bit values to ensure
 /// consistent struct layout between 32-bit and 64-bit architectures.
+/// Reserved fields maintain ABI compatibility with older versions.
 #[repr(C)]
 #[derive(Debug, Clone, Copy, Default)]
 pub struct SessionStatus {
     pub state: u32,
-    pub cpu_usage: u32,      // percent * 100 (0-10000)
-    pub memory_used_lo: u32, // bytes (low 32 bits)
-    pub memory_used_hi: u32, // bytes (high 32 bits)
+    _reserved1: u32,         // was cpu_usage - not meaningful for real hardware
+    _reserved2: u32,         // was memory_used_lo
+    _reserved3: u32,         // was memory_used_hi
     pub uptime_ns_lo: u32,   // nanoseconds (low 32 bits)
     pub uptime_ns_hi: u32,   // nanoseconds (high 32 bits)
     pub disk_activity: u32,  // bitmap of active drives
@@ -111,11 +112,6 @@ pub struct SessionStatus {
 }
 
 impl SessionStatus {
-    /// Get memory_used as u64
-    pub fn memory_used(&self) -> u64 {
-        ((self.memory_used_hi as u64) << 32) | (self.memory_used_lo as u64)
-    }
-
     /// Get uptime_ns as u64
     pub fn uptime_ns(&self) -> u64 {
         ((self.uptime_ns_hi as u64) << 32) | (self.uptime_ns_lo as u64)
@@ -131,10 +127,12 @@ pub mod flags {
 }
 
 /// Session configuration for starting (ioctl version)
+/// 
+/// Note: Memory is physically installed on SunPCi card, not configurable.
 #[repr(C)]
 #[derive(Debug, Clone, Copy)]
 pub struct IoctlSessionConfig {
-    pub memory_mb: u32,
+    _reserved: u32,          // was memory_mb - real hardware has physical RAM
     pub flags: u32,
     pub primary_disk: [u8; SUNPCI_MAX_PATH],
     pub secondary_disk: [u8; SUNPCI_MAX_PATH],
@@ -144,7 +142,7 @@ pub struct IoctlSessionConfig {
 impl Default for IoctlSessionConfig {
     fn default() -> Self {
         Self {
-            memory_mb: 64,
+            _reserved: 0,
             flags: 0,
             primary_disk: [0; SUNPCI_MAX_PATH],
             secondary_disk: [0; SUNPCI_MAX_PATH],
@@ -737,7 +735,7 @@ mod tests {
     fn test_struct_sizes() {
         // Ensure structs have predictable sizes for FFI
         assert_eq!(mem::size_of::<DriverVersion>(), 12);
-        assert_eq!(mem::size_of::<SessionStatus>(), 32);
+        assert_eq!(mem::size_of::<SessionStatus>(), 40);  // 10 x u32
         assert_eq!(mem::size_of::<DisplayInfo>(), 24);
         assert_eq!(mem::size_of::<KeyEvent>(), 8);
         assert_eq!(mem::size_of::<MouseEvent>(), 16);
@@ -745,8 +743,8 @@ mod tests {
 
     #[test]
     fn test_session_config_set_path() {
-        let mut config = SessionConfig::default();
-        SessionConfig::set_path(&mut config.primary_disk, "/path/to/disk.img");
+        let mut config = IoctlSessionConfig::default();
+        IoctlSessionConfig::set_path(&mut config.primary_disk, "/path/to/disk.img");
         assert_eq!(&config.primary_disk[..18], b"/path/to/disk.img\0");
     }
 }

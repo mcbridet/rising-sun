@@ -1,8 +1,8 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Dialogs
-import QtQuick.Window
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
+import QtQuick.Dialogs 1.1 as Dialogs
 
 // Dialog for managing host directory → guest drive letter mappings
 // Based on SunPCi filesystem redirection from analysis/05-filesystem-redirection.md
@@ -285,11 +285,12 @@ Dialog {
             }
         }
 
-        FolderDialog {
+        Dialogs.FileDialog {
             id: folderDialog
             title: "Select Host Directory"
+            selectFolder: true
             onAccepted: {
-                hostPathField.text = selectedFolder.toString().replace("file://", "")
+                hostPathField.text = fileUrl.toString().replace("file://", "")
             }
         }
 

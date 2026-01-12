@@ -345,7 +345,7 @@ struct CopyPasteRequest {
 
 Replace Motif clipboard API with modern alternatives:
 
-| Original (Motif) | Replacement (Qt6/X11) |
+| Original (Motif) | Replacement (Qt5/X11) |
 |------------------|----------------------|
 | `XmClipboardCopy` | `QClipboard::setText()` |
 | `XmClipboardRetrieve` | `QClipboard::text()` |

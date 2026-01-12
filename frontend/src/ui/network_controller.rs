@@ -316,7 +316,8 @@ fn parse_mac_address(mac: &str) -> Option<[u8; 6]> {
     Some(bytes)
 }
 
-/// Format MAC address bytes to string
+/// Format MAC address bytes to string (used in tests)
+#[cfg(test)]
 fn format_mac_address(mac: &[u8; 6]) -> String {
     format!(
         "{:02X}:{:02X}:{:02X}:{:02X}:{:02X}:{:02X}",

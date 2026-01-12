@@ -57,7 +57,6 @@ pub fn save_config_to(config: &AppConfig, path: &Path) -> Result<(), ConfigError
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::path::PathBuf;
     use tempfile::tempdir;
 
     #[test]

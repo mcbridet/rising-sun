@@ -338,7 +338,7 @@ drive_letter = "D"
 
 ### UI Integration
 
-The Qt6 frontend will provide:
+The Qt5 frontend will provide:
 - ISO file selection dialog
 - Mount/unmount buttons
 - Current ISO display

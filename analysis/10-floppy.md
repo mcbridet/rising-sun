@@ -396,7 +396,7 @@ drive_a_write_protect = false
 
 ### UI Integration
 
-The Qt6 frontend will provide:
+The Qt5 frontend will provide:
 - Floppy image file selection dialog
 - Mount/unmount buttons for A: and B:
 - Write-protect checkbox

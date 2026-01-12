@@ -105,8 +105,6 @@ enum sunpci_state {
 /**
  * struct sunpci_status - Session status
  * @state: Current session state (enum sunpci_state)
- * @cpu_usage: CPU usage (percent * 100, 0-10000)
- * @memory_used: Memory used in bytes
  * @uptime_ns: Session uptime in nanoseconds
  * @disk_activity: Bitmap of active drives (bit 0=C, bit 1=D, etc.)
  * @network_rx_packets: Network packets received
@@ -114,12 +112,13 @@ enum sunpci_state {
  *
  * Note: Layout uses explicit u32 pairs for 64-bit values to ensure
  * consistent struct layout between 32-bit and 64-bit architectures.
+ * Reserved fields maintain ABI compatibility.
  */
 struct sunpci_status {
     __u32 state;
-    __u32 cpu_usage;
-    __u32 memory_used_lo;
-    __u32 memory_used_hi;
+    __u32 _reserved1;        /* was cpu_usage - not meaningful for real hardware */
+    __u32 _reserved2;        /* was memory_used_lo */
+    __u32 _reserved3;        /* was memory_used_hi */
     __u32 uptime_ns_lo;
     __u32 uptime_ns_hi;
     __u32 disk_activity;
@@ -136,14 +135,15 @@ struct sunpci_status {
 
 /**
  * struct sunpci_session_config - Session configuration
- * @memory_mb: Memory size in megabytes (1-256)
  * @flags: Configuration flags (SUNPCI_FLAG_*)
  * @primary_disk: Path to primary disk image (C:)
  * @secondary_disk: Path to secondary disk image (D:)
  * @bios_path: Path to BIOS file (empty for default)
+ *
+ * Note: Memory is physically installed on SunPCi card, not configurable.
  */
 struct sunpci_session_config {
-    __u32 memory_mb;
+    __u32 _reserved;         /* was memory_mb - real hardware has physical RAM */
     __u32 flags;
     char primary_disk[SUNPCI_MAX_PATH];
     char secondary_disk[SUNPCI_MAX_PATH];

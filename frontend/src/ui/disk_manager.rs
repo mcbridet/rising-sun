@@ -39,6 +39,10 @@ mod qobject {
         #[qinvokable]
         fn mount_floppy(self: Pin<&mut DiskManager>, path: QString, drive_number: i32) -> bool;
 
+        /// Create a blank floppy image
+        #[qinvokable]
+        fn create_floppy(self: &DiskManager, path: QString, size_bytes: i32) -> bool;
+
         /// Eject a floppy
         #[qinvokable]
         fn eject_floppy(self: Pin<&mut DiskManager>, drive_number: i32);
@@ -280,6 +284,57 @@ impl qobject::DiskManager {
             }
             Err(e) => {
                 tracing::error!("Failed to mount floppy: {}", e);
+                false
+            }
+        }
+    }
+
+    /// Create a blank floppy image file
+    /// 
+    /// Creates a raw sector image filled with zeros.
+    /// Common sizes: 360K=368640, 720K=737280, 1.2M=1228800, 1.44M=1474560, 2.88M=2949120
+    pub fn create_floppy(&self, path: QString, size_bytes: i32) -> bool {
+        let path_str = path.to_string();
+        tracing::info!("Creating floppy image: {} ({} bytes)", path_str, size_bytes);
+
+        if size_bytes <= 0 || size_bytes > 3 * 1024 * 1024 {
+            tracing::error!("Invalid floppy size: {} bytes", size_bytes);
+            return false;
+        }
+
+        // Expand path
+        let expanded_path = expand_path(&path_str);
+
+        // Check if file already exists
+        if expanded_path.exists() {
+            tracing::error!("File already exists: {}", path_str);
+            return false;
+        }
+
+        // Create parent directory if needed
+        if let Some(parent) = expanded_path.parent() {
+            if !parent.exists() {
+                if let Err(e) = std::fs::create_dir_all(parent) {
+                    tracing::error!("Failed to create directory: {}", e);
+                    return false;
+                }
+            }
+        }
+
+        // Create the file filled with zeros
+        match std::fs::File::create(&expanded_path) {
+            Ok(file) => {
+                // Set the file size (sparse file)
+                if let Err(e) = file.set_len(size_bytes as u64) {
+                    tracing::error!("Failed to set file size: {}", e);
+                    let _ = std::fs::remove_file(&expanded_path);
+                    return false;
+                }
+                tracing::info!("Floppy image created: {}", path_str);
+                true
+            }
+            Err(e) => {
+                tracing::error!("Failed to create floppy image: {}", e);
                 false
             }
         }

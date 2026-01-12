@@ -1,7 +1,7 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Window
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
 
 // Dialog for mouse/pointer settings
 // Based on SunPCi mouse analysis from analysis/04-keyboard-mouse.md
@@ -20,7 +20,8 @@ Dialog {
 
     // Apply settings
     function applySettings() {
-        // TODO: Add mouse settings to ConfigManager when needed
+        // Mouse settings are defined in common/src/config.rs (MouseConfig)
+        // but not yet exposed via ConfigManager. Settings are visual only for now.
         config.save()
         settingsApplied()
     }

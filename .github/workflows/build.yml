@@ -1,0 +1,236 @@
+name: Build Rising Sun
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_kernel_module:
+        description: 'Build kernel module (requires kernel headers)'
+        type: boolean
+        default: true
+
+env:
+  CARGO_TERM_COLOR: always
+  QT_VERSION_MAJOR: 5
+
+jobs:
+  build-frontend:
+    name: Build Frontend (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            arch: x86_64
+            libc: glibc
+          - target: x86_64-unknown-linux-musl
+            arch: x86_64
+            libc: musl
+          - target: i686-unknown-linux-gnu
+            arch: i686
+            libc: glibc
+          - target: i686-unknown-linux-musl
+            arch: i686
+            libc: musl
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-action@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install musl tools
+        if: matrix.libc == 'musl'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y musl-tools
+          if [ "${{ matrix.arch }}" = "i686" ]; then
+            # For i686 musl, we need the 32-bit version
+            sudo apt-get install -y musl-dev:i386 || true
+          fi
+
+      - name: Install i686 cross-compilation tools
+        if: matrix.arch == 'i686'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib g++-multilib
+
+      - name: Install Qt5 dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            qtbase5-dev \
+            qtdeclarative5-dev \
+            qtmultimedia5-dev \
+            libqt5opengl5-dev \
+            qml-module-qtquick2 \
+            qml-module-qtquick-controls2 \
+            qml-module-qtquick-layouts \
+            qml-module-qtquick-dialogs \
+            qml-module-qtquick-window2 \
+            qml-module-qt-labs-platform \
+            libxkbcommon-dev \
+            libasound2-dev \
+            pkg-config \
+            cmake
+
+      - name: Install i686 Qt5 libraries
+        if: matrix.arch == 'i686'
+        run: |
+          # For i686, we need 32-bit Qt libraries
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y libqt5gui5:i386 libqt5qml5:i386 || echo "::warning::i686 Qt5 cross-compilation may require additional setup"
+
+      - name: Build
+        run: |
+          cargo build --release --target ${{ matrix.target }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rising-sun-${{ matrix.arch }}-${{ matrix.libc }}
+          path: |
+            target/${{ matrix.target }}/release/rising-sun
+            target/${{ matrix.target }}/release/rising-sun-daemon
+          if-no-files-found: warn
+
+  build-kernel-module:
+    name: Build Kernel Module
+    runs-on: ubuntu-latest
+    if: ${{ inputs.build_kernel_module }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install kernel headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y linux-headers-$(uname -r)
+
+      - name: Build kernel module
+        run: |
+          cd driver
+          make
+          
+      - name: Package kernel module with DKMS files
+        run: |
+          mkdir -p kernel-module
+          cp driver/sunpci.ko kernel-module/
+          cp driver/dkms.conf kernel-module/
+          cp driver/99-sunpci.rules kernel-module/
+          cp -r driver/src kernel-module/
+          cp -r driver/include kernel-module/
+          cp driver/Makefile kernel-module/
+          cp driver/Kbuild kernel-module/
+          
+          # Create install script
+          cat > kernel-module/install.sh << 'EOF'
+#!/bin/bash
+# Install SunPCi kernel module via DKMS
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VERSION="0.1.0"
+MODULE_NAME="sunpci"
+
+echo "Installing $MODULE_NAME kernel module..."
+
+# Copy source to DKMS directory
+sudo mkdir -p /usr/src/${MODULE_NAME}-${VERSION}
+sudo cp -r "$SCRIPT_DIR"/src /usr/src/${MODULE_NAME}-${VERSION}/
+sudo cp -r "$SCRIPT_DIR"/include /usr/src/${MODULE_NAME}-${VERSION}/
+sudo cp "$SCRIPT_DIR"/Makefile /usr/src/${MODULE_NAME}-${VERSION}/
+sudo cp "$SCRIPT_DIR"/Kbuild /usr/src/${MODULE_NAME}-${VERSION}/
+sudo cp "$SCRIPT_DIR"/dkms.conf /usr/src/${MODULE_NAME}-${VERSION}/
+
+# Install udev rules
+sudo cp "$SCRIPT_DIR"/99-sunpci.rules /etc/udev/rules.d/
+sudo udevadm control --reload-rules
+
+# Register with DKMS
+sudo dkms add -m ${MODULE_NAME} -v ${VERSION} || true
+sudo dkms build -m ${MODULE_NAME} -v ${VERSION}
+sudo dkms install -m ${MODULE_NAME} -v ${VERSION}
+
+echo "Done! Load the module with: sudo modprobe sunpci"
+EOF
+          chmod +x kernel-module/install.sh
+
+      - name: Upload kernel module artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-module
+          path: kernel-module/
+
+  package:
+    name: Create Release Package
+    runs-on: ubuntu-latest
+    needs: [build-frontend, build-kernel-module]
+    if: always() && needs.build-frontend.result == 'success'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create release packages
+        run: |
+          mkdir -p release
+          
+          # Package each architecture
+          for dir in artifacts/rising-sun-*; do
+            if [ -d "$dir" ]; then
+              name=$(basename "$dir")
+              echo "Packaging $name..."
+              
+              mkdir -p "release/$name"
+              cp -r "$dir"/* "release/$name/" 2>/dev/null || true
+              
+              # Add kernel module if available
+              if [ -d "artifacts/kernel-module" ]; then
+                cp -r artifacts/kernel-module "release/$name/driver"
+              fi
+              
+              # Add documentation
+              cp README.md "release/$name/" 2>/dev/null || true
+              
+              # Create zip
+              cd release
+              zip -r "${name}.zip" "$name"
+              cd ..
+            fi
+          done
+          
+          # Create combined package with all architectures
+          mkdir -p release/rising-sun-all
+          for dir in artifacts/rising-sun-*; do
+            if [ -d "$dir" ]; then
+              name=$(basename "$dir")
+              mkdir -p "release/rising-sun-all/bin/$name"
+              cp -r "$dir"/* "release/rising-sun-all/bin/$name/" 2>/dev/null || true
+            fi
+          done
+          
+          if [ -d "artifacts/kernel-module" ]; then
+            cp -r artifacts/kernel-module release/rising-sun-all/driver
+          fi
+          cp README.md release/rising-sun-all/ 2>/dev/null || true
+          
+          cd release
+          zip -r rising-sun-all.zip rising-sun-all
+          cd ..
+
+      - name: Upload release packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-packages
+          path: release/*.zip

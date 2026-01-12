@@ -248,7 +248,7 @@ Uses X11/OpenWindows for display. Resources loaded from:
 |--------|-------------------|------------|
 | Host OS | Solaris/SPARC | Linux/x86-64 |
 | x86 Execution | Hardware (PCI card) | Hardware (PCI card) |
-| GUI Framework | X11/Motif | Qt6 |
+| GUI Framework | X11/Motif | Qt5 |
 | Driver Model | Solaris DDI/DKI | Linux kernel module |
 | Language | C (presumed) | Rust + C |
 

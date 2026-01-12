@@ -1,8 +1,9 @@
-//! Build script for Qt integration using cxx-qt.
-
 use cxx_qt_build::{CxxQtBuilder, QmlModule};
 
 fn main() {
+    // Rebuild if Qt version preference changes
+    println!("cargo::rerun-if-env-changed=QT_VERSION_MAJOR");
+    
     CxxQtBuilder::new()
         .qml_module(QmlModule {
             uri: "com.risingsun",
@@ -14,6 +15,10 @@ fn main() {
                 "src/ui/drive_mapping_controller.rs",
                 "src/ui/session_controller.rs",
                 "src/ui/display_view.rs",
+                "src/ui/network_controller.rs",
+                "src/ui/input_controller.rs",
+                "src/ui/audio_controller.rs",
+                "src/ui/clipboard_controller.rs",
             ],
             qml_files: &[
                 "qml/main.qml",

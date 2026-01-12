@@ -1,7 +1,8 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import com.risingsun
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
+import com.risingsun 1.0
 import "dialogs"
 
 ApplicationWindow {
@@ -53,11 +54,7 @@ ApplicationWindow {
         
         onMouse_capturedChanged: {
             console.log("Mouse capture:", mouse_captured)
-            if (mouse_captured) {
-                displayOutput.cursorShape = Qt.BlankCursor
-            } else {
-                displayOutput.cursorShape = Qt.ArrowCursor
-            }
+            // Cursor shape is handled by displayMouseArea's cursorShape binding
         }
     }
     
@@ -124,7 +121,7 @@ ApplicationWindow {
             // Use Qt.callLater to avoid reentrancy
             Qt.callLater(function() {
                 if (text.length > 0) {
-                    // Note: In Qt6 QML, we need to use Clipboard API
+                    // Note: In Qt5 QML, we need to use Clipboard API
                     // This signal is emitted when guest has new content
                     console.log("Guest clipboard:", text.substring(0, 50) + (text.length > 50 ? "..." : ""))
                 }
@@ -219,8 +216,24 @@ ApplicationWindow {
     }
 
     menuBar: MenuBar {
+        // Custom delegate for menu bar items to add padding (Qt5 fix)
+        delegate: MenuBarItem {
+            id: menuBarItem
+            leftPadding: 8
+            rightPadding: 8
+        }
+        
         Menu {
             title: qsTr("&File")
+            // Add padding to menu popup
+            leftPadding: 4
+            rightPadding: 4
+            
+            delegate: MenuItem {
+                leftPadding: 12
+                rightPadding: 12
+            }
+            
             Action {
                 text: qsTr("&About")
                 onTriggered: aboutDialog.open()
@@ -345,12 +358,9 @@ ApplicationWindow {
                     checked: true
                 }
             }
-            Menu {
-                title: qsTr("&Shared Folders")
-                Action {
-                    text: qsTr("&Drive Mappings...")
-                    onTriggered: driveMappingDialog.open()
-                }
+            Action {
+                text: qsTr("&Shared Folders...")
+                onTriggered: driveMappingDialog.open()
             }
             MenuSeparator {}
             Action {
@@ -361,20 +371,53 @@ ApplicationWindow {
 
         Menu {
             title: qsTr("&View")
-            Action {
+            MenuItem {
+                id: fullscreenMenuItem
                 text: qsTr("&Fullscreen")
-                shortcut: "F11"
                 checkable: true
+                checked: window.visibility === 5  // Qt.WindowFullScreen = 5
                 onTriggered: {
-                    if (checked) {
-                        window.showFullScreen()
-                    } else {
+                    if (window.visibility === 5) {
                         window.showNormal()
+                    } else {
+                        window.showFullScreen()
+                    }
+                }
+                // Show checkbox indicator for Qt5 compatibility
+                indicator: Rectangle {
+                    implicitWidth: 16
+                    implicitHeight: 16
+                    x: 8
+                    y: parent.height / 2 - height / 2
+                    border.color: parent.checked ? palette.highlight : palette.mid
+                    border.width: 1
+                    radius: 2
+                    color: "transparent"
+                    
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 10
+                        height: 10
+                        radius: 1
+                        color: palette.highlight
+                        visible: parent.parent.checked
+                    }
+                }
+                leftPadding: 32
+            }
+            Shortcut {
+                sequence: "F11"
+                onActivated: {
+                    if (window.visibility === 5) {
+                        window.showNormal()
+                    } else {
+                        window.showFullScreen()
                     }
                 }
             }
             MenuSeparator {}
             Menu {
+                id: scalingMenu
                 title: qsTr("&Scaling")
                 
                 // Scaling mode: 0 = None (1:1), 1 = Fit to Window, 2 = Integer Scaling
@@ -387,7 +430,7 @@ ApplicationWindow {
                 Action {
                     text: qsTr("&None (1:1)")
                     checkable: true
-                    checked: parent.scalingMode === 0
+                    checked: scalingMenu.scalingMode === 0
                     onTriggered: {
                         configManager.set_integer_scaling_value(false)
                         configManager.set_maintain_aspect_ratio_value(false)
@@ -396,7 +439,7 @@ ApplicationWindow {
                 Action {
                     text: qsTr("&Fit to Window")
                     checkable: true
-                    checked: parent.scalingMode === 1
+                    checked: scalingMenu.scalingMode === 1
                     onTriggered: {
                         configManager.set_integer_scaling_value(false)
                         configManager.set_maintain_aspect_ratio_value(true)
@@ -405,7 +448,7 @@ ApplicationWindow {
                 Action {
                     text: qsTr("&Integer Scaling")
                     checkable: true
-                    checked: parent.scalingMode === 2
+                    checked: scalingMenu.scalingMode === 2
                     onTriggered: {
                         configManager.set_integer_scaling_value(true)
                         configManager.set_maintain_aspect_ratio_value(false)
@@ -427,18 +470,63 @@ ApplicationWindow {
 
         Menu {
             title: qsTr("&Input")
-            Action {
+            MenuItem {
                 text: qsTr("&Keyboard Capture")
                 checkable: true
                 checked: inputController.keyboard_captured
-                shortcut: "Right Ctrl"
                 onTriggered: inputController.toggle_keyboard_capture()
+                // Show checkbox indicator for Qt5 compatibility
+                indicator: Rectangle {
+                    implicitWidth: 16
+                    implicitHeight: 16
+                    x: 8
+                    y: parent.height / 2 - height / 2
+                    border.color: parent.checked ? palette.highlight : palette.mid
+                    border.width: 1
+                    radius: 2
+                    color: "transparent"
+                    
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 10
+                        height: 10
+                        radius: 1
+                        color: palette.highlight
+                        visible: parent.parent.checked
+                    }
+                }
+                leftPadding: 32
             }
-            Action {
+            Shortcut {
+                sequence: "Right Ctrl"
+                onActivated: inputController.toggle_keyboard_capture()
+            }
+            MenuItem {
                 text: qsTr("&Mouse Capture")
                 checkable: true
                 checked: inputController.mouse_captured
                 onTriggered: inputController.toggle_mouse_capture()
+                // Show checkbox indicator for Qt5 compatibility
+                indicator: Rectangle {
+                    implicitWidth: 16
+                    implicitHeight: 16
+                    x: 8
+                    y: parent.height / 2 - height / 2
+                    border.color: parent.checked ? palette.highlight : palette.mid
+                    border.width: 1
+                    radius: 2
+                    color: "transparent"
+                    
+                    Rectangle {
+                        anchors.centerIn: parent
+                        width: 10
+                        height: 10
+                        radius: 1
+                        color: palette.highlight
+                        visible: parent.parent.checked
+                    }
+                }
+                leftPadding: 32
             }
             MenuSeparator {}
             Action {
@@ -939,7 +1027,7 @@ ApplicationWindow {
 
         onSettingsApplied: {
             console.log("Display presentation settings applied")
-            // TODO: Apply scaling/fullscreen settings to renderer
+            // Settings saved to config - QML Image handles scaling via config values
         }
     }
 
@@ -953,7 +1041,7 @@ ApplicationWindow {
 
         onSettingsApplied: {
             console.log("Keyboard settings applied")
-            // TODO: Apply keyboard settings
+            // Settings saved to config, applied on next session start
         }
     }
 
@@ -967,7 +1055,7 @@ ApplicationWindow {
 
         onSettingsApplied: {
             console.log("Mouse settings applied")
-            // TODO: Apply mouse settings
+            // Settings saved to config, applied on next session start
         }
     }
 

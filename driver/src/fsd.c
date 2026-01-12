@@ -247,7 +247,7 @@ static int fsd_translate_path(struct sunpci_device *dev,
 static struct fsd_handle *fsd_alloc_handle(struct sunpci_fsd_state *fsd)
 {
     struct fsd_handle *h;
-su    unsigned long flags;
+    unsigned long flags;
     
     h = kzalloc(sizeof(*h), GFP_KERNEL);
     if (!h)

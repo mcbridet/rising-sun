@@ -325,19 +325,12 @@ impl qobject::DriveMappingController {
         true
     }
 
-    /// Get default mappings (like original SunPCi autoexec.bat)
-    /// From analysis/05-filesystem-redirection.md:
-    /// - F: = $SUNPCIIHOME (/opt/SUNWspci)
-    /// - H: = ~ (home directory)
-    /// - R: = / (root filesystem)
+    /// Get default mappings (empty by default)
+    /// Users can add their own mappings via the UI.
+    /// Original SunPCi used F:=/opt/SUNWspci, H:=~, R:=/ but those
+    /// are not appropriate defaults for a modern reimplementation.
     pub fn get_default_mappings_json(&self) -> QString {
-        QString::from(
-            r#"[
-                {"driveLetter":"F:","hostPath":"/opt/SUNWspci","readonly":true,"enabled":true},
-                {"driveLetter":"H:","hostPath":"~","readonly":false,"enabled":true},
-                {"driveLetter":"R:","hostPath":"/","readonly":true,"enabled":false}
-            ]"#,
-        )
+        QString::from("[]")
     }
 
     /// Check if a drive letter is valid (E-Z)

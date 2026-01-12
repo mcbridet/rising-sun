@@ -1,8 +1,8 @@
-import QtQuick
-import QtQuick.Controls
-import QtQuick.Layouts
-import QtQuick.Dialogs
-import QtQuick.Window
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Window 2.15
+import QtQuick.Dialogs 1.1 as Dialogs
 
 // Dialog for mounting an ISO file as a CD-ROM
 // Based on SunPCi CD-ROM analysis from analysis/09-cdrom.md
@@ -180,15 +180,15 @@ Dialog {
     }
     }  // ScrollView
 
-    FileDialog {
+    Dialogs.FileDialog {
         id: isoFileDialog
         title: "Select ISO Image"
-        fileMode: FileDialog.OpenFile
+        selectExisting: true
         nameFilters: ["ISO Images (*.iso *.ISO)", "All Files (*)"]
-        currentFolder: StandardPaths.writableLocation(StandardPaths.HomeLocation)
+        folder: shortcuts.home
 
         onAccepted: {
-            let path = selectedFile.toString().replace("file://", "")
+            let path = fileUrl.toString().replace("file://", "")
             isoPathField.text = path
             mountIsoDialog.selectedIsoPath = path
         }

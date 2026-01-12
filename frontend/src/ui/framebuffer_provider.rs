@@ -136,8 +136,10 @@ pub fn get_framebuffer_rgba() -> Option<(u32, u32, Vec<u8>)> {
     unsafe {
         match format {
             0 => {
-                // Indexed8 - TODO: Need palette from driver
-                // For now, treat as grayscale
+                // Indexed8 - 256-color paletted mode
+                // The VGA palette is managed by the driver (vga.c) but not yet exposed via ioctl.
+                // For now, treat palette indices as grayscale which works for most cases.
+                // Future: Add SUNPCI_IOC_GET_PALETTE ioctl to retrieve the current VGA palette.
                 for y in 0..height as usize {
                     let src_row = ptr.add(y * stride);
                     let dst_row = &mut rgba[y * width as usize * 4..];
