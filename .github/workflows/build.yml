@@ -79,6 +79,14 @@ jobs:
           EOF
             sudo chmod +x /usr/local/bin/i686-linux-musl-gcc
           fi
+          
+          # Create generic musl-g++ wrapper that cc-rs/link-cplusplus looks for
+          # This uses the target-specific compiler based on the matrix arch
+          sudo tee /usr/local/bin/musl-g++ > /dev/null << EOF
+          #!/bin/bash
+          exec clang++ --target=${{ matrix.arch }}-linux-musl "\$@"
+          EOF
+          sudo chmod +x /usr/local/bin/musl-g++
 
       - name: Install i686 cross-compilation tools
         if: matrix.arch == 'i686'
