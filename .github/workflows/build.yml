@@ -46,17 +46,56 @@ jobs:
         if: matrix.libc == 'musl'
         run: |
           sudo apt-get update
-          sudo apt-get install -y musl-tools
+          sudo apt-get install -y musl-tools musl-dev clang
+          
+          # Create wrapper scripts for musl C++ compilation using clang
+          sudo mkdir -p /usr/local/bin
+          
+          # x86_64 musl-g++ wrapper
+          sudo tee /usr/local/bin/x86_64-linux-musl-g++ > /dev/null << 'EOF'
+          #!/bin/bash
+          exec clang++ --target=x86_64-linux-musl "$@"
+          EOF
+          sudo chmod +x /usr/local/bin/x86_64-linux-musl-g++
+          
+          # x86_64 musl-gcc wrapper (alternative)
+          sudo tee /usr/local/bin/x86_64-linux-musl-gcc > /dev/null << 'EOF'
+          #!/bin/bash
+          exec clang --target=x86_64-linux-musl "$@"
+          EOF
+          sudo chmod +x /usr/local/bin/x86_64-linux-musl-gcc
+          
           if [ "${{ matrix.arch }}" = "i686" ]; then
-            # For i686 musl, we need the 32-bit version
-            sudo apt-get install -y musl-dev:i386 || true
+            # i686 musl-g++ wrapper
+            sudo tee /usr/local/bin/i686-linux-musl-g++ > /dev/null << 'EOF'
+          #!/bin/bash
+          exec clang++ --target=i686-linux-musl "$@"
+          EOF
+            sudo chmod +x /usr/local/bin/i686-linux-musl-g++
+            
+            sudo tee /usr/local/bin/i686-linux-musl-gcc > /dev/null << 'EOF'
+          #!/bin/bash
+          exec clang --target=i686-linux-musl "$@"
+          EOF
+            sudo chmod +x /usr/local/bin/i686-linux-musl-gcc
           fi
 
       - name: Install i686 cross-compilation tools
         if: matrix.arch == 'i686'
         run: |
+          sudo dpkg --add-architecture i386
           sudo apt-get update
-          sudo apt-get install -y gcc-multilib g++-multilib
+          sudo apt-get install -y gcc-multilib g++-multilib libasound2-dev:i386 libxkbcommon-dev:i386 pkg-config:i386
+          
+          # Create a pkg-config wrapper for i686 cross-compilation
+          sudo tee /usr/local/bin/i686-linux-gnu-pkg-config > /dev/null << 'EOF'
+          #!/bin/bash
+          export PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          export PKG_CONFIG_LIBDIR=/usr/lib/i386-linux-gnu/pkgconfig
+          export PKG_CONFIG_SYSROOT_DIR=/
+          exec pkg-config "$@"
+          EOF
+          sudo chmod +x /usr/local/bin/i686-linux-gnu-pkg-config
 
       - name: Install Qt5 dependencies
         run: |
@@ -80,13 +119,16 @@ jobs:
       - name: Install i686 Qt5 libraries
         if: matrix.arch == 'i686'
         run: |
-          # For i686, we need 32-bit Qt libraries
-          sudo dpkg --add-architecture i386
-          sudo apt-get update
+          # For i686, we need 32-bit Qt libraries (architecture already added)
           sudo apt-get install -y libqt5gui5:i386 libqt5qml5:i386 || echo "::warning::i686 Qt5 cross-compilation may require additional setup"
 
       - name: Build
         run: |
+          # Set up cross-compilation environment for i686
+          if [ "${{ matrix.arch }}" = "i686" ]; then
+            export PKG_CONFIG_ALLOW_CROSS=1
+            export PKG_CONFIG=/usr/local/bin/i686-linux-gnu-pkg-config
+          fi
           cargo build --release --target ${{ matrix.target }}
 
       - name: Upload artifact
