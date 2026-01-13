@@ -132,11 +132,20 @@ jobs:
 
       - name: Build
         run: |
-          # Set up cross-compilation environment for i686
+          # Set up cross-compilation environment
+          export PKG_CONFIG_ALLOW_CROSS=1
+          
           if [ "${{ matrix.arch }}" = "i686" ]; then
-            export PKG_CONFIG_ALLOW_CROSS=1
             export PKG_CONFIG=/usr/local/bin/i686-linux-gnu-pkg-config
           fi
+          
+          # For musl targets, use the host pkg-config with cross-compilation allowed
+          # The native ALSA libraries will be linked statically
+          if [ "${{ matrix.libc }}" = "musl" ]; then
+            export PKG_CONFIG_SYSROOT_DIR=/
+            export PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig
+          fi
+          
           cargo build --release --target ${{ matrix.target }}
 
       - name: Upload artifact
